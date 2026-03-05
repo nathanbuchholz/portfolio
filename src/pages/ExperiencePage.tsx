@@ -91,7 +91,7 @@ export default function ExperiencePage() {
             src={`https://drive.google.com/file/d/${driveFileId}/preview`}
             title="Resume"
             className="aspect-[8.5/11] w-full"
-            sandbox="allow-scripts allow-same-origin"
+            sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"
           />
         </div>
       </section>
