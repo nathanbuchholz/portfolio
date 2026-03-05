@@ -14,11 +14,11 @@ export default function ExperiencePage() {
       <div className="mt-4">
         <p className="max-w-2xl text-lg leading-relaxed text-gray-700 dark:text-gray-300">
           Backend-focused full stack developer with 10+ years of experience
-          spanning data engineering, infrastructure, and application development.
-          Strong background in building scalable systems, streamlining workflows,
-          and integrating large datasets to support data-driven decision making.
-          Adept at collaborating across engineering, data science, and product
-          teams.
+          spanning data engineering, infrastructure, and application
+          development. Strong background in building scalable systems,
+          streamlining workflows, and integrating large datasets to support
+          data-driven decision making. Adept at collaborating across
+          engineering, data science, and product teams.
         </p>
         <a
           href="#resume"
@@ -55,7 +55,7 @@ export default function ExperiencePage() {
             )}
             {job.projects && (
               <div className="mt-4 space-y-4">
-                <p className="text-sm italic text-gray-500 dark:text-gray-400">
+                <p className="text-sm text-gray-500 italic dark:text-gray-400">
                   Highlighted projects
                 </p>
                 {job.projects.map((project) => (
@@ -90,7 +90,7 @@ export default function ExperiencePage() {
           <iframe
             src={`https://drive.google.com/file/d/${driveFileId}/preview`}
             title="Resume"
-            className="w-full aspect-[8.5/11]"
+            className="aspect-[8.5/11] w-full"
             sandbox="allow-scripts allow-same-origin"
           />
         </div>

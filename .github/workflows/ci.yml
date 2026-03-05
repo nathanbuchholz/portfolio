@@ -65,6 +65,7 @@ jobs:
       - name: Cypress e2e tests
         uses: cypress-io/github-action@v6
         with:
+          install-command: pnpm exec cypress install
           start: pnpm run preview
           wait-on: http://localhost:4173
 

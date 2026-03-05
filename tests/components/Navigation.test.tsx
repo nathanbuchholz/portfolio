@@ -56,8 +56,7 @@ describe('Navigation', () => {
     ).toBeInTheDocument()
 
     // Click a mobile nav link - menu should close
-    const mobileLinks = screen
-      .getAllByRole('link', { name: 'Experience' })
+    const mobileLinks = screen.getAllByRole('link', { name: 'Experience' })
     fireEvent.click(mobileLinks[mobileLinks.length - 1])
     expect(
       screen.getByRole('button', { name: 'Open menu' }),

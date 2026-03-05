@@ -55,7 +55,9 @@ describe('ExperiencePage', () => {
   })
 
   it('renders projects link for independent entry', () => {
-    const link = screen.getByRole('link', { name: /view my personal projects/i })
+    const link = screen.getByRole('link', {
+      name: /view my personal projects/i,
+    })
     expect(link).toHaveAttribute('href', '/projects')
   })
 

@@ -26,12 +26,8 @@ describe('EducationPage', () => {
 
   it('renders degree and field', () => {
     for (const entry of education) {
-      expect(
-        screen.getByText(new RegExp(entry.degree)),
-      ).toBeInTheDocument()
-      expect(
-        screen.getByText(new RegExp(entry.field)),
-      ).toBeInTheDocument()
+      expect(screen.getByText(new RegExp(entry.degree))).toBeInTheDocument()
+      expect(screen.getByText(new RegExp(entry.field))).toBeInTheDocument()
     }
   })
 

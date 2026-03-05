@@ -33,7 +33,7 @@ export const projects: Project[] = [
     description:
       'This portfolio site, a React SPA with TypeScript, Tailwind CSS, Vitest, Cypress, and CI/CD via GitHub Actions. Deployed on Netlify.',
     tech: ['React', 'TypeScript', 'Tailwind CSS', 'Vite', 'Vitest', 'Cypress'],
-    liveUrl: '', //TODO add repo url
+    liveUrl: 'https://github.com/nathanbuchholz/portfolio',
     liveUrlName: 'Source Code',
   },
 ]
