@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nathan Buchholz | Portfolio</title>
+    <meta
+      name="description"
+      content="Nathan Buchholz - Software Engineer. Portfolio showcasing projects, experience, and skills."
+    />
+    <meta
+      name="theme-color"
+      content="#ffffff"
+      media="(prefers-color-scheme: light)"
+    />
+    <meta
+      name="theme-color"
+      content="#111827"
+      media="(prefers-color-scheme: dark)"
+    />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="canonical" href="https://nathanbuchholz.dev/" />
+    <meta property="og:title" content="Nathan Buchholz | Portfolio" />
+    <meta
+      property="og:description"
+      content="Nathan Buchholz - Software Engineer. Portfolio showcasing projects, experience, and skills."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://nathanbuchholz.dev/" />
+    <meta property="og:site_name" content="Nathan Buchholz" />
+    <meta
+      property="og:image"
+      content="https://nathanbuchholz.dev/og-image.png"
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Nathan Buchholz | Portfolio" />
+    <meta
+      name="twitter:description"
+      content="Nathan Buchholz - Software Engineer. Portfolio showcasing projects, experience, and skills."
+    />
+    <meta
+      name="twitter:image"
+      content="https://nathanbuchholz.dev/og-image.png"
+    />
+    <meta name="author" content="Nathan Buchholz" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Nathan Buchholz",
+        "url": "https://nathanbuchholz.dev",
+        "jobTitle": "Software Engineer",
+        "sameAs": [
+          "https://github.com/nathanbuchholz",
+          "https://www.linkedin.com/in/nathan-buchholz1/"
+        ]
+      }
+    </script>
+  </head>
+  <body>
+    <script>
+      try {
+        var t = localStorage.getItem('theme')
+        if (
+          t === 'dark' ||
+          (!t && matchMedia('(prefers-color-scheme: dark)').matches)
+        )
+          document.documentElement.classList.add('dark')
+      } catch (e) {}
+    </script>
+    <noscript>
+      <p>This site requires JavaScript to run. Please enable JavaScript in your browser settings.</p>
+    </noscript>
+    <div id="root"></div>
+    <!-- Hidden form for Netlify form detection (SPA requires this) -->
+    <form name="contact" netlify netlify-honeypot="bot-field" hidden>
+      <input type="text" name="name" />
+      <input type="email" name="email" />
+      <textarea name="message"></textarea>
+    </form>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
