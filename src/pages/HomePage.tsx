@@ -32,9 +32,9 @@ export default function HomePage() {
         </div>
         <p className="mt-6 max-w-2xl text-lg leading-relaxed text-gray-700 dark:text-gray-300">
           Backend-focused software engineer with 10+ years of experience in data
-          engineering, infrastructure, and application development. Background in
-          building data pipelines, REST APIs, and analytics platforms at scale.
-          Game developer in my spare time.
+          engineering, infrastructure, and application development. Background
+          in building data pipelines, REST APIs, and analytics platforms at
+          scale. Game developer in my spare time.
         </p>
         <div className="mt-8 flex items-center gap-6">
           <a

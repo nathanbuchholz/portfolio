@@ -53,8 +53,8 @@ public/               # Static assets
 
 ## Environment Variables
 
-| Variable | Purpose |
-| --- | --- |
+| Variable               | Purpose                                          |
+| ---------------------- | ------------------------------------------------ |
 | `VITE_RESUME_DRIVE_ID` | Google Drive file ID for the embedded resume PDF |
 
 For local development, create a `.env` file:

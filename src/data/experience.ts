@@ -21,7 +21,7 @@ export const experience: Experience[] = [
       {
         title: 'On-prem to AWS Migration',
         description:
-          'Served on a dedicated team responsible for migrating the company\'s core data infrastructure from an on-prem Perl stack with custom distributed processing to a modern AWS environment using Java, Airflow, and Spark. Contributed to decisions on API design, testing standards, and service structure that guided how the new platform was built.',
+          "Served on a dedicated team responsible for migrating the company's core data infrastructure from an on-prem Perl stack with custom distributed processing to a modern AWS environment using Java, Airflow, and Spark. Contributed to decisions on API design, testing standards, and service structure that guided how the new platform was built.",
       },
       {
         title: 'Django REST API',
@@ -46,7 +46,7 @@ export const experience: Experience[] = [
       {
         title: 'Data Monitoring Platform',
         description:
-          'Expanded the platform\'s user base to support new teams and use cases, optimized performance, and authored comprehensive documentation to lead the handoff to an overseas engineering team.',
+          "Expanded the platform's user base to support new teams and use cases, optimized performance, and authored comprehensive documentation to lead the handoff to an overseas engineering team.",
       },
     ],
   },
@@ -70,18 +70,18 @@ export const experience: Experience[] = [
       {
         title: 'TV Ratings Aggregation',
         description:
-          'Maintained and improved a large-scale Perl ETL pipeline running on a custom distributed processing framework, an early predecessor to container orchestration systems like Kubernetes. The pipeline produced the company\'s main client-facing TV ratings reports by combining demographic, schedule, and advertising data. Participated in a 24/7 on-call rotation to debug and resolve production issues under tight SLAs.',
+          "Maintained and improved a large-scale Perl ETL pipeline running on a custom distributed processing framework, an early predecessor to container orchestration systems like Kubernetes. The pipeline produced the company's main client-facing TV ratings reports by combining demographic, schedule, and advertising data. Participated in a 24/7 on-call rotation to debug and resolve production issues under tight SLAs.",
       },
       {
         title: 'Data Monitoring Platform',
         description:
-          'Expanded the platform to approximately 50 analytical views with CRUD workflows for tracking and resolving data anomalies. Integrated additional internal and third-party data sources. Managed a 3-person team\'s kanban board, refined tickets, and served as liaison between stakeholders and engineers.',
+          "Expanded the platform to approximately 50 analytical views with CRUD workflows for tracking and resolving data anomalies. Integrated additional internal and third-party data sources. Managed a 3-person team's kanban board, refined tickets, and served as liaison between stakeholders and engineers.",
       },
       {
         title: 'SQL and Python Training',
-        description: 
+        description:
           'Organized and led a weekly lunch meeting to teach SQL and Python to data entry specialists and data analysts. The sessions focused on practical skills to help colleagues automate repetitive work and engage more directly with the data they handled every day.',
-      }
+      },
     ],
   },
   {

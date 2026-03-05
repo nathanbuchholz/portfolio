@@ -68,7 +68,10 @@ describe('CatsPage', () => {
 
     // Second photo should now be displayed in lightbox
     const dialog = screen.getByRole('dialog')
-    expect(dialog.querySelector('img')).toHaveAttribute('alt', 'Helping me code')
+    expect(dialog.querySelector('img')).toHaveAttribute(
+      'alt',
+      'Helping me code',
+    )
   })
 
   it('navigates to previous photo in lightbox', () => {

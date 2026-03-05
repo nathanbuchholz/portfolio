@@ -3,15 +3,41 @@ import type { SkillCategory } from '../types'
 export const skills: SkillCategory[] = [
   {
     name: 'Languages',
-    skills: ['Python', 'SQL', 'C#', 'Java', 'Groovy', 'TypeScript', 'Perl', 'Bash', 'GDScript'],
+    skills: [
+      'Python',
+      'SQL',
+      'C#',
+      'Java',
+      'Groovy',
+      'TypeScript',
+      'Perl',
+      'Bash',
+      'GDScript',
+    ],
   },
   {
     name: 'Frontend',
-    skills: ['React', 'Angular', 'Astro', 'Node', 'Tailwind CSS', 'Cypress', 'Selenium'],
+    skills: [
+      'React',
+      'Angular',
+      'Astro',
+      'Node',
+      'Tailwind CSS',
+      'Cypress',
+      'Selenium',
+    ],
   },
   {
     name: 'Backend',
-    skills: ['Django', 'Flask', 'FastAPI', '.NET', 'REST APIs', 'GraphQL', 'pytest'],
+    skills: [
+      'Django',
+      'Flask',
+      'FastAPI',
+      '.NET',
+      'REST APIs',
+      'GraphQL',
+      'pytest',
+    ],
   },
   {
     name: 'Cloud / AWS',
@@ -19,7 +45,18 @@ export const skills: SkillCategory[] = [
   },
   {
     name: 'IaC / DevOps',
-    skills: ['Terraform', 'Docker', 'Jenkins', 'GitHub Actions', 'Git', 'Linux', 'CI/CD', 'GitHub', 'Agile', 'Microservices'],
+    skills: [
+      'Terraform',
+      'Docker',
+      'Jenkins',
+      'GitHub Actions',
+      'Git',
+      'Linux',
+      'CI/CD',
+      'GitHub',
+      'Agile',
+      'Microservices',
+    ],
   },
   {
     name: 'Data',
