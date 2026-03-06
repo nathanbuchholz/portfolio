@@ -22,6 +22,14 @@ export const projects: Project[] = [
     tech: ['Unity', 'C#', 'Game Design'],
   },
   {
+    title: 'Spritesheet Unpacker',
+    description:
+      'A cross-platform desktop app for slicing spritesheets and exporting selected slices. Supports auto-detection of irregular sprites via transparency and grid-based slicing with configurable cell dimensions and margins.',
+    tech: ['C#', 'Avalonia', '.NET'],
+    liveUrl: 'https://github.com/nathanbuchholz/spritesheet-unpacker',
+    liveUrlName: 'Source Code',
+  },
+  {
     title: 'Blog & Photo Gallery',
     description:
       'A personal blog and photo gallery site for sharing travel photography and writing.',
