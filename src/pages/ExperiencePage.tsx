@@ -1,6 +1,6 @@
-import { Link } from 'react-router'
 import { experience } from '../data'
 import Card from '../components/Card'
+import TextLink from '../components/TextLink'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
 
 const driveFileId = import.meta.env.VITE_RESUME_DRIVE_ID
@@ -20,12 +20,13 @@ export default function ExperiencePage() {
           data-driven decision making. Adept at collaborating across
           engineering, data science, and product teams.
         </p>
-        <a
+        <TextLink
           href="#resume"
-          className="mt-3 inline-block text-sm text-blue-600 transition-colors duration-200 hover:text-blue-800 hover:underline active:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300 dark:active:text-blue-200"
+          target="_self"
+          className="mt-3 inline-block text-sm"
         >
           View Resume (PDF) ↓
-        </a>
+        </TextLink>
       </div>
 
       <div className="mt-8 space-y-6">
@@ -46,12 +47,12 @@ export default function ExperiencePage() {
               </p>
             )}
             {job.projectsLink && (
-              <Link
+              <TextLink
                 to={job.projectsLink}
-                className="mt-3 inline-block text-sm font-medium text-blue-600 transition-colors duration-200 hover:text-blue-800 hover:underline active:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300 dark:active:text-blue-200"
+                className="mt-3 inline-block text-sm font-medium"
               >
                 View my personal projects →
-              </Link>
+              </TextLink>
             )}
             {job.projects && (
               <div className="mt-4 space-y-4">
@@ -79,12 +80,12 @@ export default function ExperiencePage() {
           <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
             Resume
           </h2>
-          <a
+          <TextLink
             href={`https://drive.google.com/uc?export=download&id=${driveFileId}`}
-            className="text-sm text-blue-600 transition-colors duration-200 hover:text-blue-800 hover:underline active:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300 dark:active:text-blue-200"
+            className="text-sm"
           >
             Download PDF
-          </a>
+          </TextLink>
         </div>
         <div className="mt-4 max-w-3xl rounded-lg border border-gray-200 bg-gray-100 py-4 dark:border-gray-700 dark:bg-gray-900">
           <iframe

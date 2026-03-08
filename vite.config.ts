@@ -9,5 +9,9 @@ export default defineConfig({
     globals: true,
     environment: 'jsdom',
     setupFiles: './src/test/setup.ts',
+    exclude: ['src/components/SoccerGame.tsx', 'node_modules/**'],
+    coverage: {
+      exclude: ['src/components/SoccerGame.tsx'],
+    },
   },
 })

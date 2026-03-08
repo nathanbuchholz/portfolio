@@ -26,6 +26,15 @@ describe('Dark mode', () => {
     cy.get('html').should('have.class', 'dark')
   })
 
+  it('shows tooltip on theme toggle hover', () => {
+    cy.visit('/')
+    cy.get('button[aria-label*="Switch to"]').focus()
+    cy.get('[role="tooltip"]', { timeout: 6000 }).should(
+      'contain.text',
+      'Toggle theme',
+    )
+  })
+
   it('respects localStorage preference', () => {
     cy.visit('/', {
       onBeforeLoad(win) {

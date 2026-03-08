@@ -2,6 +2,12 @@ import type { Project } from '../types'
 
 export const projects: Project[] = [
   {
+    title: 'Soccer Juggling Game',
+    description:
+      'A physics-based soccer juggling game built with React, TypeScript, Canvas 2D, and Matter.js. Features a guided tutorial, combo scoring, collectibles, configurable settings, and high score tracking. Click the soccer ball in the nav bar to play!',
+    tech: ['React', 'TypeScript', 'Matter.js', 'Canvas'],
+  },
+  {
     title: 'Soccer Management Sim',
     description:
       'A UI-intensive soccer management game featuring a procedurally generated, realistic world, a headless and fully testable simulation core, modular domain APIs, complex table-driven management interfaces, and RPG-style player progression systems.',
