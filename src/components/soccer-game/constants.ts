@@ -321,7 +321,16 @@ export const TUTORIAL_VISIBLE_PHASES: ReadonlySet<TutorialPhase> = new Set([
   'complete',
 ])
 
-export function isTutorialPhysicsPhase(phase: TutorialPhase): boolean {
+type TutorialPhysicsPhase =
+  | 'step1_pause'
+  | 'step2'
+  | 'step3'
+  | 'step4'
+  | 'step5'
+
+export function isTutorialPhysicsPhase(
+  phase: TutorialPhase,
+): phase is TutorialPhysicsPhase {
   return TUTORIAL_PHYSICS_PHASES.has(phase)
 }
 
