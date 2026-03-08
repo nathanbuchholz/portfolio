@@ -3,6 +3,9 @@ import { FaGithub, FaLinkedin } from 'react-icons/fa'
 import ContactModal from '../components/ContactModal'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
 
+const socialLinkClass =
+  'inline-flex items-center gap-2 text-gray-700 transition-all duration-200 hover:text-blue-600 active:scale-95 active:text-blue-800 dark:text-gray-300 dark:hover:text-blue-400 dark:active:text-blue-300'
+
 export default function HomePage() {
   useDocumentTitle()
   const [showContact, setShowContact] = useState(false)
@@ -41,7 +44,7 @@ export default function HomePage() {
             href="https://github.com/nathanbuchholz"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 text-gray-700 transition-all duration-200 hover:text-blue-600 active:scale-95 active:text-blue-800 dark:text-gray-300 dark:hover:text-blue-400 dark:active:text-blue-300"
+            className={socialLinkClass}
           >
             <FaGithub className="h-6 w-6" aria-hidden="true" />
             GitHub
@@ -50,7 +53,7 @@ export default function HomePage() {
             href="https://www.linkedin.com/in/nathan-buchholz1/"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 text-gray-700 transition-all duration-200 hover:text-blue-600 active:scale-95 active:text-blue-800 dark:text-gray-300 dark:hover:text-blue-400 dark:active:text-blue-300"
+            className={socialLinkClass}
           >
             <FaLinkedin className="h-6 w-6" aria-hidden="true" />
             LinkedIn

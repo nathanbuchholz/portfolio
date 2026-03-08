@@ -6,6 +6,8 @@ import Tooltip from './Tooltip'
 
 const SoccerGame = lazy(() => import('./soccer-game'))
 
+const iconBtnClass =
+  'cursor-pointer rounded-md p-2 text-gray-600 transition-all duration-200 hover:bg-gray-100 hover:text-gray-900 active:scale-95 active:bg-gray-200 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-100 dark:active:bg-gray-700'
 
 const links = [
   { to: '/', label: 'Home' },
@@ -51,7 +53,7 @@ export default function Navigation() {
           onClick={() => setMenuOpen(!menuOpen)}
           aria-label={menuOpen ? 'Close menu' : 'Open menu'}
           aria-expanded={menuOpen}
-          className="cursor-pointer rounded-md p-2 text-gray-600 transition-all duration-200 hover:bg-gray-100 hover:text-gray-900 active:scale-95 active:bg-gray-200 md:hidden dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-100 dark:active:bg-gray-700"
+          className={`${iconBtnClass} md:hidden`}
         >
           {menuOpen ? <FaTimes /> : <FaBars />}
         </button>
@@ -95,15 +97,15 @@ export default function Navigation() {
             </button>
           </Tooltip>
 
-        {/* Theme toggle */}
+          {/* Theme toggle */}
           <Tooltip text="Toggle theme">
-        <button
-          onClick={toggleTheme}
-          aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+            <button
+              onClick={toggleTheme}
+              aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
               className={iconBtnClass}
-        >
-          {theme === 'dark' ? '☀️' : '🌙'}
-        </button>
+            >
+              {theme === 'dark' ? '☀️' : '🌙'}
+            </button>
           </Tooltip>
         </div>
       </div>

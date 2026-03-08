@@ -11,6 +11,9 @@ interface LightboxProps {
   onNext: () => void
 }
 
+const navBtnClass =
+  'cursor-pointer rounded-full p-2 text-gray-600 transition-all duration-300 hover:bg-gray-100 hover:text-gray-900 active:scale-95 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-100'
+
 export default function Lightbox({
   photos,
   currentIndex,
@@ -143,7 +146,7 @@ export default function Lightbox({
           <button
             onClick={onPrev}
             aria-label="Previous photo"
-            className="cursor-pointer rounded-full p-2 text-gray-600 transition-all duration-300 hover:bg-gray-100 hover:text-gray-900 active:scale-95 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-100"
+            className={navBtnClass}
           >
             <FaChevronLeft />
           </button>
@@ -157,7 +160,7 @@ export default function Lightbox({
           <button
             onClick={onNext}
             aria-label="Next photo"
-            className="cursor-pointer rounded-full p-2 text-gray-600 transition-all duration-300 hover:bg-gray-100 hover:text-gray-900 active:scale-95 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-100"
+            className={navBtnClass}
           >
             <FaChevronRight />
           </button>

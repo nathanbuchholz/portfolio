@@ -1,5 +1,6 @@
 import { education } from '../data'
 import Card from '../components/Card'
+import TextLink from '../components/TextLink'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
 
 export default function EducationPage() {
@@ -12,14 +13,9 @@ export default function EducationPage() {
           <Card as="article" key={`${entry.institution}-${entry.field}`}>
             <h2 className="text-xl font-semibold">
               {entry.institutionUrl ? (
-                <a
-                  href={entry.institutionUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-600 transition-colors duration-200 hover:text-blue-800 hover:underline active:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300 dark:active:text-blue-200"
-                >
+                <TextLink href={entry.institutionUrl}>
                   {entry.institution}
-                </a>
+                </TextLink>
               ) : (
                 entry.institution
               )}
@@ -27,14 +23,9 @@ export default function EducationPage() {
             <p className="text-gray-600 dark:text-gray-400">
               {entry.degree},{' '}
               {entry.fieldUrl ? (
-                <a
-                  href={entry.fieldUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-600 underline transition-colors duration-200 hover:text-blue-800 active:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300 dark:active:text-blue-200"
-                >
+                <TextLink href={entry.fieldUrl} className="underline">
                   {entry.field}
-                </a>
+                </TextLink>
               ) : (
                 entry.field
               )}

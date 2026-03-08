@@ -13,6 +13,23 @@ function encode(data: Record<string, string>) {
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
+const labelClass = 'block text-sm font-medium text-gray-700 dark:text-gray-300'
+
+const inputBaseClass =
+  'mt-1 w-full rounded-md border bg-white px-3 py-2 text-gray-900 focus:ring-1 focus:outline-none dark:bg-gray-700 dark:text-gray-100'
+const inputBorderNormal =
+  'border-gray-300 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600'
+const inputBorderError =
+  'border-red-500 focus:border-red-500 focus:ring-red-500 dark:border-red-500'
+
+function inputClass(hasError: boolean) {
+  return `${inputBaseClass} ${hasError ? inputBorderError : inputBorderNormal}`
+}
+
+function fieldErrorClass(show: boolean) {
+  return `mt-1 text-sm text-red-600 dark:text-red-400 ${show ? 'visible' : 'invisible'}`
+}
+
 function validate(formData: { name: string; email: string; message: string }) {
   const errors: Partial<Record<'name' | 'email' | 'message', string>> = {}
   if (!formData.name.trim()) errors.name = 'Name is required'
@@ -132,7 +149,7 @@ export default function ContactModal({ open, onClose }: ContactModalProps) {
             <div>
               <label
                 htmlFor="contact-name"
-                className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                className={labelClass}
               >
                 Name
               </label>
@@ -147,11 +164,11 @@ export default function ContactModal({ open, onClose }: ContactModalProps) {
                 aria-describedby={
                   touched.name && errors.name ? 'name-error' : undefined
                 }
-                className={`mt-1 w-full rounded-md border bg-white px-3 py-2 text-gray-900 focus:ring-1 focus:outline-none dark:bg-gray-700 dark:text-gray-100 ${touched.name && errors.name ? 'border-red-500 focus:border-red-500 focus:ring-red-500 dark:border-red-500' : 'border-gray-300 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600'}`}
+                className={inputClass(!!touched.name && !!errors.name)}
               />
               <p
                 id="name-error"
-                className={`mt-1 text-sm text-red-600 dark:text-red-400 ${touched.name && errors.name ? 'visible' : 'invisible'}`}
+                className={fieldErrorClass(!!touched.name && !!errors.name)}
               >
                 {errors.name ?? '\u00A0'}
               </p>
@@ -160,7 +177,7 @@ export default function ContactModal({ open, onClose }: ContactModalProps) {
             <div>
               <label
                 htmlFor="contact-email"
-                className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                className={labelClass}
               >
                 Email
               </label>
@@ -175,11 +192,11 @@ export default function ContactModal({ open, onClose }: ContactModalProps) {
                 aria-describedby={
                   touched.email && errors.email ? 'email-error' : undefined
                 }
-                className={`mt-1 w-full rounded-md border bg-white px-3 py-2 text-gray-900 focus:ring-1 focus:outline-none dark:bg-gray-700 dark:text-gray-100 ${touched.email && errors.email ? 'border-red-500 focus:border-red-500 focus:ring-red-500 dark:border-red-500' : 'border-gray-300 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600'}`}
+                className={inputClass(!!touched.email && !!errors.email)}
               />
               <p
                 id="email-error"
-                className={`mt-1 text-sm text-red-600 dark:text-red-400 ${touched.email && errors.email ? 'visible' : 'invisible'}`}
+                className={fieldErrorClass(!!touched.email && !!errors.email)}
               >
                 {errors.email ?? '\u00A0'}
               </p>
@@ -188,7 +205,7 @@ export default function ContactModal({ open, onClose }: ContactModalProps) {
             <div>
               <label
                 htmlFor="contact-message"
-                className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                className={labelClass}
               >
                 Message
               </label>
@@ -205,11 +222,11 @@ export default function ContactModal({ open, onClose }: ContactModalProps) {
                     ? 'message-error'
                     : undefined
                 }
-                className={`mt-1 w-full rounded-md border bg-white px-3 py-2 text-gray-900 focus:ring-1 focus:outline-none dark:bg-gray-700 dark:text-gray-100 ${touched.message && errors.message ? 'border-red-500 focus:border-red-500 focus:ring-red-500 dark:border-red-500' : 'border-gray-300 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600'}`}
+                className={inputClass(!!touched.message && !!errors.message)}
               />
               <p
                 id="message-error"
-                className={`mt-1 text-sm text-red-600 dark:text-red-400 ${touched.message && errors.message ? 'visible' : 'invisible'}`}
+                className={fieldErrorClass(!!touched.message && !!errors.message)}
               >
                 {errors.message ?? '\u00A0'}
               </p>
