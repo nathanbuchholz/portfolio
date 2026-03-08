@@ -83,7 +83,7 @@ export interface VisualEffect {
 
 export interface GameHandle {
   handleClick: (x: number, y: number) => void
-  newGame: (dropY?: number) => void
+  newGame: (dropY?: number, keepPosition?: boolean) => void
   cleanup: () => void
   resetForTutorial: () => void
 }
