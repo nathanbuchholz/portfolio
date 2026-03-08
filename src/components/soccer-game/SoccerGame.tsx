@@ -227,7 +227,10 @@ export default function SoccerGame({
 
   useEffect(() => {
     if (tutorialPhase === 'complete') {
-      const timer = setTimeout(() => startCountdown(), 2000)
+      const timer = setTimeout(() => {
+        gameRef.current?.newGame(undefined, true)
+        startCountdown()
+      }, 2000)
       return () => clearTimeout(timer)
     }
   }, [tutorialPhase, startCountdown])

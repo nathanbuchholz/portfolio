@@ -166,9 +166,13 @@ export async function createGameEngine(
       friction: initialCfg.friction,
       frictionAir: initialCfg.airResistance,
       density: initialCfg.ballDensity,
-      isStatic: !tutorialSeen,
     },
   )
+  // Set static AFTER creation so Body.setStatic saves _original
+  // (Matter.js bug: passing isStatic in options skips _original save)
+  if (!tutorialSeen) {
+    Matter.Body.setStatic(ball, true)
+  }
 
   const ground = Matter.Bodies.rectangle(
     w / 2,
@@ -262,7 +266,7 @@ export async function createGameEngine(
     }
   }
 
-  function newGame(dropY?: number) {
+  function newGame(dropY?: number, keepPosition?: boolean) {
     checkAndSaveHighScore()
 
     gameScore.volleys = 0
@@ -281,12 +285,16 @@ export async function createGameEngine(
     collectibles.length = 0
     floatingTexts.length = 0
 
-    // Reset ball to center and pause for countdown
-    const resetX = w / 2
-    const resetY = dropY ?? groundH * TUTORIAL_START_Y_RATIO
-    Matter.Body.setPosition(ball, { x: resetX, y: resetY })
+    if (!keepPosition) {
+      const resetX = w / 2
+      const resetY = dropY ?? groundH * TUTORIAL_START_Y_RATIO
+      Matter.Body.setPosition(ball, { x: resetX, y: resetY })
+    }
     Matter.Body.setVelocity(ball, { x: 0, y: 0 })
     Matter.Body.setStatic(ball, true)
+
+    // Clear stale collision pairs so the next ground hit fires collisionStart
+    Matter.Pairs.clear(engine.pairs)
   }
 
   let lastGroundHitTime = 0
