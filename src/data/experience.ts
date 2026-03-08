@@ -8,7 +8,7 @@ export const experience: Experience[] = [
     startDate: '2025',
     endDate: 'Present',
     summary:
-      'Building a soccer manager simulation game in Godot, modeling the complex world of soccer, including realistic flow of players and demographics, web development, and freelance work. Building personal projects to deepen expertise in systems design, UI architecture, and full stack development.',
+      'Building full stack and data engineering projects to deepen expertise across Python, cloud infrastructure, and CI/CD, including an end-to-end ETL and REST API pipeline. Developing a soccer management simulation in Godot with procedural world generation, complex data modeling, and RPG-style progression systems. Visit the projects page for a deeper look at these and other personal projects, including a playable browser-based soccer game on this site!',
     projectsLink: '/projects',
   },
   {

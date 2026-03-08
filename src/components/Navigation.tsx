@@ -1,7 +1,9 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, lazy, Suspense } from 'react'
 import { NavLink } from 'react-router'
 import { FaBars, FaTimes } from 'react-icons/fa'
 import { useTheme } from '../hooks/useTheme'
+const SoccerGame = lazy(() => import('./soccer-game'))
+
 
 const links = [
   { to: '/', label: 'Home' },
@@ -15,7 +17,9 @@ const links = [
 export default function Navigation() {
   const { theme, toggleTheme } = useTheme()
   const [menuOpen, setMenuOpen] = useState(false)
+  const [gameStart, setGameStart] = useState<{ x: number; y: number } | null>(null)
   const navRef = useRef<HTMLElement>(null)
+  const ballBtnRef = useRef<HTMLButtonElement>(null)
 
   function closeMenu() {
     setMenuOpen(false)
@@ -71,14 +75,35 @@ export default function Navigation() {
           ))}
         </ul>
 
+        <div className="flex items-center gap-1">
+          {/* Soccer game toggle */}
+          <Tooltip text="Juggle the soccer ball!">
+            <button
+              ref={ballBtnRef}
+              onClick={() => {
+                const rect = ballBtnRef.current?.getBoundingClientRect()
+                if (rect) {
+                  setGameStart({ x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 })
+                }
+              }}
+              aria-label="Play soccer juggling game"
+              className={iconBtnClass}
+            >
+              <img src="/soccer_ball.svg" alt="" className={`h-4 w-4${gameStart ? ' invisible' : ''}`} />
+            </button>
+          </Tooltip>
+
         {/* Theme toggle */}
+          <Tooltip text="Toggle theme">
         <button
           onClick={toggleTheme}
           aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
-          className="cursor-pointer rounded-md p-2 text-gray-600 transition-all duration-200 hover:bg-gray-100 hover:text-gray-900 active:scale-95 active:bg-gray-200 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-100 dark:active:bg-gray-700"
+              className={iconBtnClass}
         >
           {theme === 'dark' ? '☀️' : '🌙'}
         </button>
+          </Tooltip>
+        </div>
       </div>
 
       {/* Mobile menu */}
@@ -103,6 +128,15 @@ export default function Navigation() {
             </li>
           ))}
         </ul>
+      )}
+      {gameStart && (
+        <Suspense fallback={null}>
+          <SoccerGame
+            startX={gameStart.x}
+            startY={gameStart.y}
+            onClose={() => setGameStart(null)}
+          />
+        </Suspense>
       )}
     </nav>
   )

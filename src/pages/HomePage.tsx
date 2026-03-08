@@ -34,7 +34,7 @@ export default function HomePage() {
           Backend-focused software engineer with 10+ years of experience in data
           engineering, infrastructure, and application development. Background
           in building data pipelines, REST APIs, and analytics platforms at
-          scale. Game developer in my spare time.
+          scale. Hobbyist game developer.
         </p>
         <div className="mt-8 flex items-center gap-6">
           <a
