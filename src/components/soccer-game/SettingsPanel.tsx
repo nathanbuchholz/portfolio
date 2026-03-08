@@ -58,6 +58,10 @@ export function SettingsPanel({
             Save As
           </button>
         </div>
+        <hr className="border-gray-700/50" />
+        <div className="text-[10px] font-bold tracking-widest text-gray-500 uppercase select-none">
+          Presets/Difficulty
+        </div>
         <div className="flex gap-1">
           <select
             value={preset}
