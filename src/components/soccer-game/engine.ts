@@ -262,7 +262,7 @@ export async function createGameEngine(
     }
   }
 
-  function newGame() {
+  function newGame(dropY?: number) {
     checkAndSaveHighScore()
 
     gameScore.volleys = 0
@@ -280,6 +280,13 @@ export async function createGameEngine(
     effects.length = 0
     collectibles.length = 0
     floatingTexts.length = 0
+
+    // Reset ball to center and pause for countdown
+    const resetX = w / 2
+    const resetY = dropY ?? groundH * TUTORIAL_START_Y_RATIO
+    Matter.Body.setPosition(ball, { x: resetX, y: resetY })
+    Matter.Body.setVelocity(ball, { x: 0, y: 0 })
+    Matter.Body.setStatic(ball, true)
   }
 
   let lastGroundHitTime = 0
@@ -297,7 +304,6 @@ export async function createGameEngine(
         if (
           isTutorialPhysicsPhase(tPhase) ||
           tPhase === 'step1' ||
-          tPhase === 'step1_pause' ||
           tPhase === 'complete'
         )
           break

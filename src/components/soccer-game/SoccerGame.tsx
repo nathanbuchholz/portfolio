@@ -127,6 +127,7 @@ export default function SoccerGame({
 }: SoccerGameProps) {
   const bgCanvasRef = useRef<HTMLCanvasElement>(null)
   const ballCanvasRef = useRef<HTMLCanvasElement>(null)
+  const scoreboardRef = useRef<HTMLDivElement>(null)
   const [loading, setLoading] = useState(true)
   const [score, setScore] = useState<GameScore>(() => ({
     volleys: 0,
@@ -372,7 +373,10 @@ export default function SoccerGame({
       {!loading && tutorialPhase === 'playing' && (
         <>
           {/* Scoreboard */}
-          <div className="pointer-events-none absolute top-4 left-1/2 z-20 max-w-[calc(100vw-5rem)] -translate-x-1/2 rounded-xl bg-white/90 px-4 py-3 shadow-lg backdrop-blur-sm select-none sm:max-w-none sm:px-6 dark:bg-gray-800/90">
+          <div
+            ref={scoreboardRef}
+            className="pointer-events-none absolute top-4 left-1/2 z-20 max-w-[calc(100vw-5rem)] -translate-x-1/2 rounded-xl bg-white/90 px-4 py-3 shadow-lg backdrop-blur-sm select-none sm:max-w-none sm:px-6 dark:bg-gray-800/90"
+          >
             <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 font-mono sm:gap-x-6">
               <div className="text-center">
                 <div className="text-[10px] font-bold tracking-wider text-gray-500 uppercase dark:text-gray-400">
@@ -480,7 +484,15 @@ export default function SoccerGame({
           {/* Buttons */}
           <div className="absolute top-4 right-2 z-20 flex gap-1 sm:right-4 sm:gap-2">
             <button
-              onClick={() => gameRef.current?.newGame()}
+              onClick={() => {
+                pausedRef.current = false
+                setPaused(false)
+                const dropY =
+                  scoreboardRef.current?.getBoundingClientRect().bottom ??
+                  undefined
+                gameRef.current?.newGame(dropY)
+                startCountdown()
+              }}
               aria-label="New game"
               className="cursor-pointer rounded-lg bg-blue-500/90 px-2 py-1 text-xs font-bold tracking-wider text-white uppercase shadow-md backdrop-blur-sm transition-all hover:bg-blue-500 active:scale-95 sm:px-3 sm:py-1.5 sm:text-sm"
             >
