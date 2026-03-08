@@ -756,6 +756,44 @@ export async function createGameEngine(
           })
         }
       }
+
+      // Safety clamps for side walls and ceiling
+      if (ball.position.x < cfg.ballSize) {
+        Matter.Body.setPosition(ball, {
+          x: cfg.ballSize,
+          y: ball.position.y,
+        })
+        if (ball.velocity.x < 0) {
+          Matter.Body.setVelocity(ball, {
+            x: -ball.velocity.x,
+            y: ball.velocity.y,
+          })
+        }
+      }
+      if (ball.position.x > effectiveW - cfg.ballSize) {
+        Matter.Body.setPosition(ball, {
+          x: effectiveW - cfg.ballSize,
+          y: ball.position.y,
+        })
+        if (ball.velocity.x > 0) {
+          Matter.Body.setVelocity(ball, {
+            x: -ball.velocity.x,
+            y: ball.velocity.y,
+          })
+        }
+      }
+      if (ball.position.y < cfg.ballSize) {
+        Matter.Body.setPosition(ball, {
+          x: ball.position.x,
+          y: cfg.ballSize,
+        })
+        if (ball.velocity.y < 0) {
+          Matter.Body.setVelocity(ball, {
+            x: ball.velocity.x,
+            y: -ball.velocity.y,
+          })
+        }
+      }
     }
 
     // Tutorial bounce: check ball position each frame instead of relying on
