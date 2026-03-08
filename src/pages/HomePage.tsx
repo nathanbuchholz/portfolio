@@ -14,16 +14,14 @@ export default function HomePage() {
     <main>
       <section className="py-12">
         <div className="flex flex-col items-start gap-8 sm:flex-row sm:items-center">
-          <div>
+          <div className="w-32">
             <img
               src="/nathan-profile.jpg"
               alt="Nathan Buchholz"
               className="h-32 w-32 rounded-lg border-2 border-gray-200 object-cover dark:border-gray-700"
             />
             <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
-              Finishing the Civ V
-              <br />
-              Chichén Itzá in person
+              Completing the Civilization V Chichén Itzá wonder IRL
             </p>
           </div>
           <div>
