@@ -2,6 +2,8 @@ import { useState, useRef, useEffect, lazy, Suspense } from 'react'
 import { NavLink } from 'react-router'
 import { FaBars, FaTimes } from 'react-icons/fa'
 import { useTheme } from '../hooks/useTheme'
+import Tooltip from './Tooltip'
+
 const SoccerGame = lazy(() => import('./soccer-game'))
 
 
