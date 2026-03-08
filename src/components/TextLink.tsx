@@ -23,6 +23,11 @@ export default function TextLink({ className = '', ...props }: TextLinkProps) {
   }
 
   return (
-    <a target="_blank" rel="noopener noreferrer" className={merged} {...props} />
+    <a
+      target="_blank"
+      rel="noopener noreferrer"
+      className={merged}
+      {...props}
+    />
   )
 }

@@ -21,7 +21,9 @@ const links = [
 export default function Navigation() {
   const { theme, toggleTheme } = useTheme()
   const [menuOpen, setMenuOpen] = useState(false)
-  const [gameStart, setGameStart] = useState<{ x: number; y: number } | null>(null)
+  const [gameStart, setGameStart] = useState<{ x: number; y: number } | null>(
+    null,
+  )
   const navRef = useRef<HTMLElement>(null)
   const ballBtnRef = useRef<HTMLButtonElement>(null)
 
@@ -87,13 +89,20 @@ export default function Navigation() {
               onClick={() => {
                 const rect = ballBtnRef.current?.getBoundingClientRect()
                 if (rect) {
-                  setGameStart({ x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 })
+                  setGameStart({
+                    x: rect.left + rect.width / 2,
+                    y: rect.top + rect.height / 2,
+                  })
                 }
               }}
               aria-label="Play soccer juggling game"
               className={iconBtnClass}
             >
-              <img src="/soccer_ball.svg" alt="" className={`h-4 w-4${gameStart ? ' invisible' : ''}`} />
+              <img
+                src="/soccer_ball.svg"
+                alt=""
+                className={`h-4 w-4${gameStart ? 'invisible' : ''}`}
+              />
             </button>
           </Tooltip>
 

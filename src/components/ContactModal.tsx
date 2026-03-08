@@ -147,10 +147,7 @@ export default function ContactModal({ open, onClose }: ContactModalProps) {
             </p>
 
             <div>
-              <label
-                htmlFor="contact-name"
-                className={labelClass}
-              >
+              <label htmlFor="contact-name" className={labelClass}>
                 Name
               </label>
               <input
@@ -175,10 +172,7 @@ export default function ContactModal({ open, onClose }: ContactModalProps) {
             </div>
 
             <div>
-              <label
-                htmlFor="contact-email"
-                className={labelClass}
-              >
+              <label htmlFor="contact-email" className={labelClass}>
                 Email
               </label>
               <input
@@ -203,10 +197,7 @@ export default function ContactModal({ open, onClose }: ContactModalProps) {
             </div>
 
             <div>
-              <label
-                htmlFor="contact-message"
-                className={labelClass}
-              >
+              <label htmlFor="contact-message" className={labelClass}>
                 Message
               </label>
               <textarea
@@ -226,7 +217,9 @@ export default function ContactModal({ open, onClose }: ContactModalProps) {
               />
               <p
                 id="message-error"
-                className={fieldErrorClass(!!touched.message && !!errors.message)}
+                className={fieldErrorClass(
+                  !!touched.message && !!errors.message,
+                )}
               >
                 {errors.message ?? '\u00A0'}
               </p>

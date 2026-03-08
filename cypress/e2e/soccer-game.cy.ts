@@ -3,7 +3,7 @@ describe('Soccer game', () => {
     cy.visit('/', {
       onBeforeLoad(win) {
         win.localStorage.setItem('soccer-game-tutorial-seen', '1')
-      }
+      },
     })
   })
 
@@ -28,6 +28,9 @@ describe('Soccer game', () => {
 
   it('shows tooltip on soccer button hover', () => {
     cy.get('button[aria-label="Play soccer juggling game"]').focus()
-    cy.get('[role="tooltip"]', { timeout: 6000 }).should('contain.text', 'Juggle the soccer ball!')
+    cy.get('[role="tooltip"]', { timeout: 6000 }).should(
+      'contain.text',
+      'Juggle the soccer ball!',
+    )
   })
 })

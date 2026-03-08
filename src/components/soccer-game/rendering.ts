@@ -3,7 +3,7 @@ export function drawGroundShadow(
   ballX: number,
   ballY: number,
   canvasH: number,
-  radius: number
+  radius: number,
 ) {
   const groundY = canvasH - 2
   const height = canvasH - ballY
@@ -31,7 +31,7 @@ export function drawSoccerBall(
   radius: number,
   angle: number,
   onCooldown: boolean,
-  img: HTMLImageElement
+  img: HTMLImageElement,
 ) {
   ctx.save()
   ctx.translate(x, y)
@@ -50,7 +50,7 @@ export function drawKickZoneHighlight(
   x: number,
   y: number,
   radius: number,
-  time: number
+  time: number,
 ) {
   const pulse = 0.3 + 0.15 * Math.sin(time * 0.006)
   ctx.save()

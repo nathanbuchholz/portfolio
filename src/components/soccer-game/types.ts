@@ -49,7 +49,17 @@ export interface HighScore {
   bestPPM: number
 }
 
-export type TutorialPhase = 'growth' | 'step1' | 'step1_pause' | 'step2' | 'step3' | 'step4' | 'step5' | 'complete' | 'countdown' | 'playing'
+export type TutorialPhase =
+  | 'growth'
+  | 'step1'
+  | 'step1_pause'
+  | 'step2'
+  | 'step3'
+  | 'step4'
+  | 'step5'
+  | 'complete'
+  | 'countdown'
+  | 'playing'
 
 export type PresetName = 'easy' | 'normal' | 'hard'
 

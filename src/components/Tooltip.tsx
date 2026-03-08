@@ -38,6 +38,7 @@ export default function Tooltip({
   const timerRef = useRef<ReturnType<typeof setTimeout>>(null)
   const leaveTimerRef = useRef<ReturnType<typeof setTimeout>>(null)
   const lockedBeforeLeave = useRef(false)
+  const [fadeOutDuration, setFadeOutDuration] = useState(FADE_OUT_MS)
   const wrapperRef = useRef<HTMLSpanElement>(null)
   const tooltipRef = useRef<HTMLSpanElement>(null)
   const [position, setPosition] = useState<{
@@ -60,7 +61,13 @@ export default function Tooltip({
     }
   }
 
-  useEffect(() => () => { clear(); clearLeave() }, [])
+  useEffect(
+    () => () => {
+      clear()
+      clearLeave()
+    },
+    [],
+  )
 
   const updatePosition = useCallback(() => {
     const wrapper = wrapperRef.current
@@ -78,7 +85,10 @@ export default function Tooltip({
 
     // Horizontal: center, then clamp to viewport
     let x = wRect.left + wRect.width / 2 - tRect.width / 2
-    x = Math.max(VIEWPORT_PAD, Math.min(x, window.innerWidth - tRect.width - VIEWPORT_PAD))
+    x = Math.max(
+      VIEWPORT_PAD,
+      Math.min(x, window.innerWidth - tRect.width - VIEWPORT_PAD),
+    )
 
     setPosition({ x, y, above })
   }, [])
@@ -124,6 +134,9 @@ export default function Tooltip({
       leaveTimerRef.current = null
       const wasLocked = lockedBeforeLeave.current
       clear()
+      setFadeOutDuration(
+        wasLocked ? FADE_OUT_MS * LOCKED_FADE_MULTIPLIER : FADE_OUT_MS,
+      )
       setPhase('fading-out')
       timerRef.current = setTimeout(
         () => setPhase('hidden'),
@@ -136,8 +149,6 @@ export default function Tooltip({
   const filling = phase === 'filling'
   const locked = phase === 'locked'
   const fadingOut = phase === 'fading-out'
-  const fadeOutDuration = lockedBeforeLeave.current ? FADE_OUT_MS * LOCKED_FADE_MULTIPLIER : FADE_OUT_MS
-
   return (
     <>
       <span
@@ -158,9 +169,7 @@ export default function Tooltip({
             style={{
               position: 'fixed',
               left: `${position.x}px`,
-              top: position.above
-                ? `${position.y}px`
-                : `${position.y}px`,
+              top: position.above ? `${position.y}px` : `${position.y}px`,
               zIndex: 9999,
               pointerEvents: 'auto',
               // Add padding on the side facing the trigger to create a hover bridge
@@ -171,7 +180,7 @@ export default function Tooltip({
             <span
               ref={tooltipRef}
               role="tooltip"
-              className="relative overflow-hidden whitespace-nowrap rounded-md border border-gray-200 px-3 py-1.5 text-sm shadow-sm select-none dark:border-gray-700"
+              className="relative overflow-hidden rounded-md border border-gray-200 px-3 py-1.5 text-sm whitespace-nowrap shadow-sm select-none dark:border-gray-700"
               style={{
                 display: 'block',
                 opacity: fadingOut ? 0 : 1,
@@ -198,7 +207,7 @@ export default function Tooltip({
               />
               {/* Locked border */}
               <span
-                className="absolute inset-0 rounded-md ring-2 ring-inset ring-gray-300/40 dark:ring-gray-600/40"
+                className="absolute inset-0 rounded-md ring-2 ring-gray-300/40 ring-inset dark:ring-gray-600/40"
                 style={{
                   opacity: locked || fadingOut ? 1 : 0,
                   transition: `opacity ${LOCKED_BORDER_FADE_MS}ms ease`,

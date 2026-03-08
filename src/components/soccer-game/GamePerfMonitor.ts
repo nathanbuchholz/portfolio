@@ -1,4 +1,6 @@
-function toMB(b: number) { return (b / 1024 / 1024).toFixed(1) }
+function toMB(b: number) {
+  return (b / 1024 / 1024).toFixed(1)
+}
 
 export class GamePerfMonitor {
   private frameTimes: number[] = []
@@ -24,7 +26,9 @@ export class GamePerfMonitor {
   private maxFrameTime = 0
 
   constructor() {
-    const mem = (performance as unknown as { memory?: { usedJSHeapSize: number } }).memory
+    const mem = (
+      performance as unknown as { memory?: { usedJSHeapSize: number } }
+    ).memory
     if (mem) {
       this.heapBaseline = mem.usedJSHeapSize
       this.peakHeap = this.heapBaseline
@@ -80,7 +84,9 @@ export class GamePerfMonitor {
       this.displayEngine = this.engineDuration
       this.displayDraw = this.drawDuration
 
-      const mem = (performance as unknown as { memory?: { usedJSHeapSize: number } }).memory
+      const mem = (
+        performance as unknown as { memory?: { usedJSHeapSize: number } }
+      ).memory
       if (mem) {
         this.currentHeap = mem.usedJSHeapSize
         if (this.currentHeap > this.peakHeap) this.peakHeap = this.currentHeap
@@ -90,7 +96,8 @@ export class GamePerfMonitor {
 
   getFPS(): number {
     if (this.frameTimes.length < 2) return 0
-    const avg = this.frameTimes.reduce((a, b) => a + b, 0) / this.frameTimes.length
+    const avg =
+      this.frameTimes.reduce((a, b) => a + b, 0) / this.frameTimes.length
     return avg > 0 ? 1000 / avg : 0
   }
 
@@ -105,7 +112,9 @@ export class GamePerfMonitor {
       `frame: ${this.displayFrameTime.toFixed(1)}ms  (physics: ${this.displayEngine.toFixed(1)}  draw: ${this.displayDraw.toFixed(1)})`,
     ]
     if (hasMem) {
-      lines.push(`heap: ${toMB(this.currentHeap)}MB  peak: ${toMB(this.peakHeap)}MB  (+${toMB(this.currentHeap - this.heapBaseline)}MB)`)
+      lines.push(
+        `heap: ${toMB(this.currentHeap)}MB  peak: ${toMB(this.peakHeap)}MB  (+${toMB(this.currentHeap - this.heapBaseline)}MB)`,
+      )
     }
 
     ctx.save()
@@ -118,7 +127,8 @@ export class GamePerfMonitor {
 
     ctx.fillStyle = 'rgba(0, 0, 0, 0.7)'
     ctx.fillRect(8, 8, boxW, boxH)
-    ctx.fillStyle = this.displayFPS > 0 && this.displayFPS < 30 ? '#ef4444' : '#22c55e'
+    ctx.fillStyle =
+      this.displayFPS > 0 && this.displayFPS < 30 ? '#ef4444' : '#22c55e'
     lines.forEach((line, i) => {
       if (i > 0) ctx.fillStyle = '#e5e7eb'
       ctx.fillText(line, 8 + padding, 8 + padding + (i + 1) * lineHeight - 3)
@@ -136,7 +146,9 @@ export class GamePerfMonitor {
       `maxFrameTime=${this.maxFrameTime.toFixed(1)}ms`,
     ]
     if (hasMem) {
-      parts.push(`heap=${toMB(this.currentHeap)}MB peak=${toMB(this.peakHeap)}MB growth=${toMB(heapGrowth)}MB`)
+      parts.push(
+        `heap=${toMB(this.currentHeap)}MB peak=${toMB(this.peakHeap)}MB growth=${toMB(heapGrowth)}MB`,
+      )
     }
 
     console.log(parts.join(' | '))
@@ -145,7 +157,9 @@ export class GamePerfMonitor {
       console.warn('[GamePerfMonitor] WARNING: Average FPS below 30!')
     }
     if (hasMem && heapGrowth > 50 * 1024 * 1024) {
-      console.warn(`[GamePerfMonitor] WARNING: Heap grew by ${toMB(heapGrowth)}MB since start!`)
+      console.warn(
+        `[GamePerfMonitor] WARNING: Heap grew by ${toMB(heapGrowth)}MB since start!`,
+      )
     }
 
     this.minFPS = Infinity

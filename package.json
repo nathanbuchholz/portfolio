@@ -19,7 +19,8 @@
     "cy:open": "cypress open",
     "cy:run": "cypress run",
     "test:e2e": "pnpm build && start-server-and-test 'vite preview' http://localhost:4173 'cypress run'",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage",
+    "ci": "pnpm lint && pnpm format:check && pnpm build && pnpm test:run && pnpm test:e2e"
   },
   "dependencies": {
     "matter-js": "^0.20.0",

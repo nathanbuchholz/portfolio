@@ -1,14 +1,39 @@
 import { useEffect, useRef, useState, useCallback } from 'react'
-import type { GameConfig, GameHandle, GameScore, HighScore, PresetName, SoccerGameProps, TutorialPhase, TutorialSteps } from './types'
+import type {
+  GameConfig,
+  GameHandle,
+  GameScore,
+  HighScore,
+  PresetName,
+  SoccerGameProps,
+  TutorialPhase,
+  TutorialSteps,
+} from './types'
 import {
-  DEFAULT_CONFIG, PRESETS, LS_PRESET_KEY, LS_CONFIG_KEY, LS_CUSTOM_CONFIGS_KEY,
-  INITIAL_TUTORIAL_STEPS, CLICKABLE_PHASES, TUTORIAL_VISIBLE_PHASES,
-  buildConfig, loadHighScore, formatTime,
+  DEFAULT_CONFIG,
+  PRESETS,
+  LS_PRESET_KEY,
+  LS_CONFIG_KEY,
+  LS_CUSTOM_CONFIGS_KEY,
+  INITIAL_TUTORIAL_STEPS,
+  CLICKABLE_PHASES,
+  TUTORIAL_VISIBLE_PHASES,
+  buildConfig,
+  loadHighScore,
+  formatTime,
 } from './constants'
 import { SettingsPanel } from './SettingsPanel'
 import { createGameEngine } from './engine'
 
-function PopCounter({ value, className, prefix }: { value: number; className?: string; prefix?: string }) {
+function PopCounter({
+  value,
+  className,
+  prefix,
+}: {
+  value: number
+  className?: string
+  prefix?: string
+}) {
   const spanRef = useRef<HTMLSpanElement>(null)
   const prevRef = useRef(value)
 
@@ -24,24 +49,40 @@ function PopCounter({ value, className, prefix }: { value: number; className?: s
           { transform: 'scale(1.5)' },
           { transform: 'scale(1)', color: currentColor },
         ],
-        { duration: 400, easing: 'cubic-bezier(0.22, 1, 0.36, 1)' }
+        { duration: 400, easing: 'cubic-bezier(0.22, 1, 0.36, 1)' },
       )
       return () => anim.cancel()
     }
   }, [value])
 
   return (
-    <span ref={spanRef} className={className ?? ''} style={{ display: 'inline-block' }}>
-      {prefix}{value}
+    <span
+      ref={spanRef}
+      className={className ?? ''}
+      style={{ display: 'inline-block' }}
+    >
+      {prefix}
+      {value}
     </span>
   )
 }
 
-function TutorialCheckItem({ checked, text, visible }: { checked: boolean; text: string; visible: boolean }) {
+function TutorialCheckItem({
+  checked,
+  text,
+  visible,
+}: {
+  checked: boolean
+  text: string
+  visible: boolean
+}) {
   return (
     <div
       className="grid transition-[grid-template-rows,opacity] duration-500 ease-out"
-      style={{ gridTemplateRows: visible ? '1fr' : '0fr', opacity: visible ? 1 : 0 }}
+      style={{
+        gridTemplateRows: visible ? '1fr' : '0fr',
+        opacity: visible ? 1 : 0,
+      }}
     >
       <div className="overflow-hidden">
         <div className="flex items-center gap-2 py-0.5">
@@ -49,13 +90,15 @@ function TutorialCheckItem({ checked, text, visible }: { checked: boolean; text:
             type="checkbox"
             checked={checked}
             readOnly
-            className="h-3.5 w-3.5 shrink-0 accent-green-500 pointer-events-none"
+            className="pointer-events-none h-3.5 w-3.5 shrink-0 accent-green-500"
           />
-          <span className={`text-sm font-medium transition-all duration-300
-            ${checked
-              ? 'text-gray-400 line-through dark:text-gray-500'
-              : 'text-gray-800 dark:text-gray-200'
-            }`}>
+          <span
+            className={`text-sm font-medium transition-all duration-300 ${
+              checked
+                ? 'text-gray-400 line-through dark:text-gray-500'
+                : 'text-gray-800 dark:text-gray-200'
+            }`}
+          >
             {text}
           </span>
         </div>
@@ -69,7 +112,7 @@ function ExitButton({ onClick }: { onClick: () => void }) {
     <button
       onClick={onClick}
       aria-label="Close game"
-      className="cursor-pointer rounded-lg bg-white/90 px-2 py-1 text-xs sm:px-3 sm:py-1.5 sm:text-sm font-medium text-gray-700 shadow-md backdrop-blur-sm transition-all hover:bg-white active:scale-95 dark:bg-gray-800/90 dark:text-red-300 dark:hover:bg-gray-800"
+      className="cursor-pointer rounded-lg bg-white/90 px-2 py-1 text-xs font-medium text-gray-700 shadow-md backdrop-blur-sm transition-all hover:bg-white active:scale-95 sm:px-3 sm:py-1.5 sm:text-sm dark:bg-gray-800/90 dark:text-red-300 dark:hover:bg-gray-800"
     >
       <span className="sm:hidden">✕</span>
       <span className="hidden sm:inline">Exit</span>
@@ -77,11 +120,20 @@ function ExitButton({ onClick }: { onClick: () => void }) {
   )
 }
 
-export default function SoccerGame({ onClose, startX, startY }: SoccerGameProps) {
+export default function SoccerGame({
+  onClose,
+  startX,
+  startY,
+}: SoccerGameProps) {
   const bgCanvasRef = useRef<HTMLCanvasElement>(null)
   const ballCanvasRef = useRef<HTMLCanvasElement>(null)
   const [loading, setLoading] = useState(true)
-  const [score, setScore] = useState<GameScore>({ volleys: 0, drops: 0, points: 0, startTime: performance.now() })
+  const [score, setScore] = useState<GameScore>(() => ({
+    volleys: 0,
+    drops: 0,
+    points: 0,
+    startTime: performance.now(),
+  }))
   const [multiplier, setMultiplier] = useState(1)
   const [elapsed, setElapsed] = useState(0)
   const [highScore, setHighScore] = useState<HighScore>(loadHighScore)
@@ -90,18 +142,24 @@ export default function SoccerGame({ onClose, startX, startY }: SoccerGameProps)
   const [settingsOpen, setSettingsOpen] = useState(false)
   const [settingsClosing, setSettingsClosing] = useState(false)
   const settingsOpenRef = useRef(false)
-  const [customConfigs, setCustomConfigs] = useState<Record<string, Partial<GameConfig>>>(() => {
+  const [customConfigs, setCustomConfigs] = useState<
+    Record<string, Partial<GameConfig>>
+  >(() => {
     try {
       const saved = localStorage.getItem(LS_CUSTOM_CONFIGS_KEY)
       if (saved) return JSON.parse(saved)
-    } catch { /* ignore */ }
+    } catch {
+      /* ignore */
+    }
     return {}
   })
   const [preset, setPreset] = useState<string>(() => {
     try {
       const saved = localStorage.getItem(LS_PRESET_KEY)
       if (saved) return saved
-    } catch { /* ignore */ }
+    } catch {
+      /* ignore */
+    }
     return 'normal'
   })
   const [config, setConfig] = useState<GameConfig>(() => {
@@ -111,13 +169,17 @@ export default function SoccerGame({ onClose, startX, startY }: SoccerGameProps)
       if (savedPreset && savedPreset in PRESETS) {
         presetOverrides = PRESETS[savedPreset as PresetName].overrides
       } else if (savedPreset) {
-        const customs = JSON.parse(localStorage.getItem(LS_CUSTOM_CONFIGS_KEY) || '{}')
+        const customs = JSON.parse(
+          localStorage.getItem(LS_CUSTOM_CONFIGS_KEY) || '{}',
+        )
         if (savedPreset in customs) presetOverrides = customs[savedPreset]
       }
       const saved = localStorage.getItem(LS_CONFIG_KEY)
       if (saved) return buildConfig(presetOverrides, JSON.parse(saved))
       return buildConfig(presetOverrides)
-    } catch { /* ignore */ }
+    } catch {
+      /* ignore */
+    }
     return buildConfig()
   })
   const configRef = useRef<GameConfig>(DEFAULT_CONFIG)
@@ -125,21 +187,29 @@ export default function SoccerGame({ onClose, startX, startY }: SoccerGameProps)
   const highScoreRef = useRef<HighScore>(loadHighScore())
   const [tutorialPhase, setTutorialPhase] = useState<TutorialPhase>('growth')
   const tutorialPhaseRef = useRef<TutorialPhase>('growth')
-  const [tutorialSteps, setTutorialSteps] = useState<TutorialSteps>({ ...INITIAL_TUTORIAL_STEPS })
+  const [tutorialSteps, setTutorialSteps] = useState<TutorialSteps>({
+    ...INITIAL_TUTORIAL_STEPS,
+  })
   const tutorialStepsRef = useRef<TutorialSteps>({ ...INITIAL_TUTORIAL_STEPS })
   const [countdownNumber, setCountdownNumber] = useState(3)
   const countdownTimers = useRef<ReturnType<typeof setTimeout>[]>([])
 
-  useEffect(() => { configRef.current = config }, [config])
-  useEffect(() => { highScoreRef.current = highScore }, [highScore])
-  useEffect(() => { tutorialStepsRef.current = tutorialSteps }, [tutorialSteps])
+  useEffect(() => {
+    configRef.current = config
+  }, [config])
+  useEffect(() => {
+    highScoreRef.current = highScore
+  }, [highScore])
+  useEffect(() => {
+    tutorialStepsRef.current = tutorialSteps
+  }, [tutorialSteps])
 
   function clearCountdownTimers() {
     countdownTimers.current.forEach(clearTimeout)
     countdownTimers.current = []
   }
 
-  function startCountdown() {
+  const startCountdown = useCallback(() => {
     clearCountdownTimers()
     setTutorialPhase('countdown')
     tutorialPhaseRef.current = 'countdown'
@@ -152,28 +222,42 @@ export default function SoccerGame({ onClose, startX, startY }: SoccerGameProps)
         tutorialPhaseRef.current = 'playing'
       }, 2100),
     )
-  }
+  }, [])
 
   useEffect(() => {
     if (tutorialPhase === 'complete') {
       const timer = setTimeout(() => startCountdown(), 2000)
       return () => clearTimeout(timer)
     }
-  }, [tutorialPhase])
+  }, [tutorialPhase, startCountdown])
 
   useEffect(() => clearCountdownTimers, [])
 
   useEffect(() => {
     let cancelled = false
 
-    createGameEngine({
-      bgCanvas: bgCanvasRef.current!,
-      ballCanvas: ballCanvasRef.current!,
-      startX, startY,
-      configRef, highScoreRef, tutorialPhaseRef, tutorialStepsRef, settingsOpenRef, pausedRef,
-      setLoading, setScore, setMultiplier, setElapsed, setHighScore,
-      setTutorialPhase, setTutorialSteps,
-    }, () => cancelled).then(handle => {
+    createGameEngine(
+      {
+        bgCanvas: bgCanvasRef.current!,
+        ballCanvas: ballCanvasRef.current!,
+        startX,
+        startY,
+        configRef,
+        highScoreRef,
+        tutorialPhaseRef,
+        tutorialStepsRef,
+        settingsOpenRef,
+        pausedRef,
+        setLoading,
+        setScore,
+        setMultiplier,
+        setElapsed,
+        setHighScore,
+        setTutorialPhase,
+        setTutorialSteps,
+      },
+      () => cancelled,
+    ).then((handle) => {
       if (handle && !cancelled) gameRef.current = handle
     })
 
@@ -185,7 +269,9 @@ export default function SoccerGame({ onClose, startX, startY }: SoccerGameProps)
 
   useEffect(() => {
     document.body.style.overflow = 'hidden'
-    return () => { document.body.style.overflow = '' }
+    return () => {
+      document.body.style.overflow = ''
+    }
   }, [])
 
   useEffect(() => {
@@ -202,7 +288,10 @@ export default function SoccerGame({ onClose, startX, startY }: SoccerGameProps)
     gameRef.current?.handleClick(e.clientX, e.clientY)
   }, [])
 
-  function updateConfig(key: keyof GameConfig, value: number | string | boolean) {
+  function updateConfig(
+    key: keyof GameConfig,
+    value: number | string | boolean,
+  ) {
     setConfig((prev) => ({ ...prev, [key]: value }))
   }
 
@@ -266,7 +355,10 @@ export default function SoccerGame({ onClose, startX, startY }: SoccerGameProps)
       `}</style>
       <div
         className="absolute inset-0 z-0"
-        style={{ backgroundColor: config.overlayColor, animation: 'soccer-fadeIn 400ms ease-out' }}
+        style={{
+          backgroundColor: config.overlayColor,
+          animation: 'soccer-fadeIn 400ms ease-out',
+        }}
       />
 
       <canvas ref={bgCanvasRef} className="absolute inset-0 z-10" />
@@ -280,73 +372,117 @@ export default function SoccerGame({ onClose, startX, startY }: SoccerGameProps)
       {!loading && tutorialPhase === 'playing' && (
         <>
           {/* Scoreboard */}
-          <div className="pointer-events-none absolute top-4 left-1/2 z-20 max-w-[calc(100vw-5rem)] sm:max-w-none -translate-x-1/2 select-none rounded-xl bg-white/90 px-4 sm:px-6 py-3 shadow-lg backdrop-blur-sm dark:bg-gray-800/90">
-            <div className="flex flex-wrap justify-center items-center gap-x-4 sm:gap-x-6 gap-y-1 font-mono">
+          <div className="pointer-events-none absolute top-4 left-1/2 z-20 max-w-[calc(100vw-5rem)] -translate-x-1/2 rounded-xl bg-white/90 px-4 py-3 shadow-lg backdrop-blur-sm select-none sm:max-w-none sm:px-6 dark:bg-gray-800/90">
+            <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 font-mono sm:gap-x-6">
               <div className="text-center">
-                <div className="text-[10px] font-bold tracking-wider text-gray-500 uppercase dark:text-gray-400">Mult</div>
-                <PopCounter value={multiplier} className="text-lg sm:text-2xl font-bold text-blue-500" prefix="x" />
+                <div className="text-[10px] font-bold tracking-wider text-gray-500 uppercase dark:text-gray-400">
+                  Mult
+                </div>
+                <PopCounter
+                  value={multiplier}
+                  className="text-lg font-bold text-blue-500 sm:text-2xl"
+                  prefix="x"
+                />
               </div>
-              <div className="hidden sm:block h-8 w-px bg-gray-300 dark:bg-gray-600" />
+              <div className="hidden h-8 w-px bg-gray-300 sm:block dark:bg-gray-600" />
               <div className="text-center">
-                <div className="text-[10px] font-bold tracking-wider text-gray-500 uppercase dark:text-gray-400">Points</div>
-                <PopCounter value={score.points} className="text-lg sm:text-2xl font-bold text-amber-500" />
+                <div className="text-[10px] font-bold tracking-wider text-gray-500 uppercase dark:text-gray-400">
+                  Points
+                </div>
+                <PopCounter
+                  value={score.points}
+                  className="text-lg font-bold text-amber-500 sm:text-2xl"
+                />
               </div>
-              <div className="hidden sm:block h-8 w-px bg-gray-300 dark:bg-gray-600" />
+              <div className="hidden h-8 w-px bg-gray-300 sm:block dark:bg-gray-600" />
               <div className="text-center">
-                <div className="text-[10px] font-bold tracking-wider text-gray-500 uppercase dark:text-gray-400">Points per minute</div>
-                <div className="text-lg sm:text-2xl font-bold text-emerald-500">
-                  {elapsed > 0 ? ((score.points / elapsed) * 60).toFixed(1) : '0.0'}
+                <div className="text-[10px] font-bold tracking-wider text-gray-500 uppercase dark:text-gray-400">
+                  Points per minute
+                </div>
+                <div className="text-lg font-bold text-emerald-500 sm:text-2xl">
+                  {elapsed > 0
+                    ? ((score.points / elapsed) * 60).toFixed(1)
+                    : '0.0'}
                 </div>
               </div>
-              <div className="hidden sm:block h-8 w-px bg-gray-300 dark:bg-gray-600" />
+              <div className="hidden h-8 w-px bg-gray-300 sm:block dark:bg-gray-600" />
               <div className="text-center">
-                <div className="text-[10px] font-bold tracking-wider text-gray-500 uppercase dark:text-gray-400">Time</div>
-                <div className="text-lg sm:text-2xl font-bold text-gray-900 dark:text-gray-100">{formatTime(elapsed)}</div>
+                <div className="text-[10px] font-bold tracking-wider text-gray-500 uppercase dark:text-gray-400">
+                  Time
+                </div>
+                <div className="text-lg font-bold text-gray-900 sm:text-2xl dark:text-gray-100">
+                  {formatTime(elapsed)}
+                </div>
               </div>
-              <div className="hidden sm:block h-8 w-px bg-gray-300 dark:bg-gray-600" />
+              <div className="hidden h-8 w-px bg-gray-300 sm:block dark:bg-gray-600" />
               <div className="text-center">
-                <div className="text-[10px] font-bold tracking-wider text-gray-500 uppercase dark:text-gray-400">Volleys</div>
-                <div className="text-lg sm:text-2xl font-bold text-gray-900 dark:text-gray-100">{score.volleys}</div>
+                <div className="text-[10px] font-bold tracking-wider text-gray-500 uppercase dark:text-gray-400">
+                  Volleys
+                </div>
+                <div className="text-lg font-bold text-gray-900 sm:text-2xl dark:text-gray-100">
+                  {score.volleys}
+                </div>
               </div>
-              <div className="hidden sm:block h-8 w-px bg-gray-300 dark:bg-gray-600" />
+              <div className="hidden h-8 w-px bg-gray-300 sm:block dark:bg-gray-600" />
               <div className="text-center">
-                <div className="text-[10px] font-bold tracking-wider text-gray-500 uppercase dark:text-gray-400">Drops</div>
-                <div className="text-lg sm:text-2xl font-bold text-gray-900 dark:text-gray-100">{score.drops}</div>
+                <div className="text-[10px] font-bold tracking-wider text-gray-500 uppercase dark:text-gray-400">
+                  Drops
+                </div>
+                <div className="text-lg font-bold text-gray-900 sm:text-2xl dark:text-gray-100">
+                  {score.drops}
+                </div>
               </div>
             </div>
 
-            {(highScore.bestPoints > 0 || highScore.bestTime > 0 || highScore.bestPPM > 0) && (
+            {(highScore.bestPoints > 0 ||
+              highScore.bestTime > 0 ||
+              highScore.bestPPM > 0) && (
               <div className="mt-2 border-t border-gray-200 pt-2 text-center text-[11px] text-gray-500 dark:border-gray-600 dark:text-gray-400">
-                {highScore.bestPoints > 0 && <>Best points: {highScore.bestPoints}</>}
-                {highScore.bestPoints > 0 && (highScore.bestPPM > 0 || highScore.bestTime > 0) && ' · '}
-                {highScore.bestPPM > 0 && <><span className="sm:hidden">PPM</span><span className="hidden sm:inline">Points per minute</span>: {highScore.bestPPM.toFixed(1)}</>}
+                {highScore.bestPoints > 0 && (
+                  <>Best points: {highScore.bestPoints}</>
+                )}
+                {highScore.bestPoints > 0 &&
+                  (highScore.bestPPM > 0 || highScore.bestTime > 0) &&
+                  ' · '}
+                {highScore.bestPPM > 0 && (
+                  <>
+                    <span className="sm:hidden">PPM</span>
+                    <span className="hidden sm:inline">
+                      Points per minute
+                    </span>: {highScore.bestPPM.toFixed(1)}
+                  </>
+                )}
                 {highScore.bestPPM > 0 && highScore.bestTime > 0 && ' · '}
-                {highScore.bestTime > 0 && <>Time: {formatTime(highScore.bestTime)}</>}
+                {highScore.bestTime > 0 && (
+                  <>Time: {formatTime(highScore.bestTime)}</>
+                )}
               </div>
             )}
           </div>
 
           {/* Pause button - top-left */}
-          <div className="absolute top-4 left-2 sm:left-4 z-20">
+          <div className="absolute top-4 left-2 z-20 sm:left-4">
             <button
               onClick={() => {
                 pausedRef.current = !pausedRef.current
                 setPaused(pausedRef.current)
               }}
               aria-label={paused ? 'Resume game' : 'Pause game'}
-              className="cursor-pointer rounded-lg bg-white/90 px-2 py-1 text-xs sm:px-3 sm:py-1.5 sm:text-sm font-medium text-gray-700 shadow-md backdrop-blur-sm transition-all hover:bg-white active:scale-95 dark:bg-gray-800/90 dark:text-gray-300 dark:hover:bg-gray-800"
+              className="cursor-pointer rounded-lg bg-white/90 px-2 py-1 text-xs font-medium text-gray-700 shadow-md backdrop-blur-sm transition-all hover:bg-white active:scale-95 sm:px-3 sm:py-1.5 sm:text-sm dark:bg-gray-800/90 dark:text-gray-300 dark:hover:bg-gray-800"
             >
               <span className="sm:hidden">{paused ? '▶' : '⏸'}</span>
-              <span className="hidden sm:inline">{paused ? 'Resume' : 'Pause'}</span>
+              <span className="hidden sm:inline">
+                {paused ? 'Resume' : 'Pause'}
+              </span>
             </button>
           </div>
 
           {/* Buttons */}
-          <div className="absolute top-4 right-2 sm:right-4 z-20 flex gap-1 sm:gap-2">
+          <div className="absolute top-4 right-2 z-20 flex gap-1 sm:right-4 sm:gap-2">
             <button
               onClick={() => gameRef.current?.newGame()}
               aria-label="New game"
-              className="cursor-pointer rounded-lg bg-blue-500/90 px-2 py-1 text-xs sm:px-3 sm:py-1.5 sm:text-sm font-bold tracking-wider text-white uppercase shadow-md backdrop-blur-sm transition-all hover:bg-blue-500 active:scale-95"
+              className="cursor-pointer rounded-lg bg-blue-500/90 px-2 py-1 text-xs font-bold tracking-wider text-white uppercase shadow-md backdrop-blur-sm transition-all hover:bg-blue-500 active:scale-95 sm:px-3 sm:py-1.5 sm:text-sm"
             >
               <span className="sm:hidden">↻</span>
               <span className="hidden sm:inline">New Game</span>
@@ -356,17 +492,22 @@ export default function SoccerGame({ onClose, startX, startY }: SoccerGameProps)
                 if (settingsOpen) {
                   settingsOpenRef.current = false
                   setSettingsClosing(true)
-                  setTimeout(() => { setSettingsClosing(false); setSettingsOpen(false) }, 300)
+                  setTimeout(() => {
+                    setSettingsClosing(false)
+                    setSettingsOpen(false)
+                  }, 300)
                 } else {
                   settingsOpenRef.current = true
                   setSettingsOpen(true)
                 }
               }}
               aria-label="Toggle game settings"
-              className={`cursor-pointer rounded-lg px-2 py-1 text-xs sm:w-[7.5rem] sm:px-3 sm:py-1.5 sm:text-sm font-medium shadow-md backdrop-blur-sm transition-all hover:bg-white active:scale-95 dark:hover:bg-gray-800 ${settingsOpen ? 'bg-blue-500/90 text-white dark:bg-blue-500/90 dark:text-white' : 'bg-white/90 text-gray-700 dark:bg-gray-800/90 dark:text-gray-300'}`}
+              className={`cursor-pointer rounded-lg px-2 py-1 text-xs font-medium shadow-md backdrop-blur-sm transition-all hover:bg-white active:scale-95 sm:w-[7.5rem] sm:px-3 sm:py-1.5 sm:text-sm dark:hover:bg-gray-800 ${settingsOpen ? 'bg-blue-500/90 text-white dark:bg-blue-500/90 dark:text-white' : 'bg-white/90 text-gray-700 dark:bg-gray-800/90 dark:text-gray-300'}`}
             >
               <span className="sm:hidden">⚙</span>
-              <span className="hidden sm:inline">{settingsOpen ? 'Hide' : 'Game Settings'}</span>
+              <span className="hidden sm:inline">
+                {settingsOpen ? 'Hide' : 'Game Settings'}
+              </span>
             </button>
             <button
               onClick={() => {
@@ -378,7 +519,7 @@ export default function SoccerGame({ onClose, startX, startY }: SoccerGameProps)
                 tutorialPhaseRef.current = 'step1'
               }}
               aria-label="Show tutorial"
-              className="cursor-pointer rounded-lg bg-white/90 px-2 py-1 text-xs sm:px-3 sm:py-1.5 sm:text-sm font-bold text-gray-700 shadow-md backdrop-blur-sm transition-all hover:bg-white active:scale-95 dark:bg-gray-800/90 dark:text-gray-300 dark:hover:bg-gray-800"
+              className="cursor-pointer rounded-lg bg-white/90 px-2 py-1 text-xs font-bold text-gray-700 shadow-md backdrop-blur-sm transition-all hover:bg-white active:scale-95 sm:px-3 sm:py-1.5 sm:text-sm dark:bg-gray-800/90 dark:text-gray-300 dark:hover:bg-gray-800"
             >
               <span title="Tutorial">?</span>
             </button>
@@ -403,7 +544,7 @@ export default function SoccerGame({ onClose, startX, startY }: SoccerGameProps)
 
       {/* Exit button visible during tutorial phases */}
       {!loading && tutorialPhase !== 'playing' && (
-        <div className="absolute top-4 right-2 sm:right-4 z-50">
+        <div className="absolute top-4 right-2 z-50 sm:right-4">
           <ExitButton onClick={onClose} />
         </div>
       )}
@@ -411,9 +552,10 @@ export default function SoccerGame({ onClose, startX, startY }: SoccerGameProps)
       {/* Tutorial checklist */}
       {TUTORIAL_VISIBLE_PHASES.has(tutorialPhase) && (
         <div className="pointer-events-none absolute inset-0 z-40 flex items-center justify-center pl-[12%]">
-          <div className="w-[28rem] rounded-xl border border-gray-200 bg-white/90 px-5 py-4 shadow-lg backdrop-blur-sm
-                          dark:border-gray-600 dark:bg-gray-800/90">
-            <h2 className="text-base font-bold text-gray-800 dark:text-gray-200 mb-1">Tutorial</h2>
+          <div className="w-[28rem] rounded-xl border border-gray-200 bg-white/90 px-5 py-4 shadow-lg backdrop-blur-sm dark:border-gray-600 dark:bg-gray-800/90">
+            <h2 className="mb-1 text-base font-bold text-gray-800 dark:text-gray-200">
+              Tutorial
+            </h2>
             <TutorialCheckItem
               checked={tutorialSteps.step1}
               visible
@@ -441,13 +583,20 @@ export default function SoccerGame({ onClose, startX, startY }: SoccerGameProps)
             />
             <div
               className="grid transition-[grid-template-rows,opacity] duration-500 ease-out"
-              style={{ gridTemplateRows: tutorialPhase === 'complete' ? '1fr' : '0fr', opacity: tutorialPhase === 'complete' ? 1 : 0 }}
+              style={{
+                gridTemplateRows: tutorialPhase === 'complete' ? '1fr' : '0fr',
+                opacity: tutorialPhase === 'complete' ? 1 : 0,
+              }}
             >
               <div className="overflow-hidden">
                 <div className="mt-3 border-t border-gray-200 pt-3 dark:border-gray-600">
-                  <span className="text-base font-bold text-green-500">Tutorial Complete!</span>
+                  <span className="text-base font-bold text-green-500">
+                    Tutorial Complete!
+                  </span>
                 </div>
-                <div className="mt-2 text-2xl font-bold text-white/80">Have Fun!</div>
+                <div className="mt-2 text-2xl font-bold text-white/80">
+                  Have Fun!
+                </div>
               </div>
             </div>
           </div>
@@ -458,7 +607,7 @@ export default function SoccerGame({ onClose, startX, startY }: SoccerGameProps)
       {tutorialPhase === 'countdown' && (
         <div className="pointer-events-none absolute inset-0 z-40 flex items-center justify-center">
           <span
-            className="text-[120px] font-bold leading-none text-white/80 drop-shadow-lg"
+            className="text-[120px] leading-none font-bold text-white/80 drop-shadow-lg"
             style={{ fontVariantNumeric: 'tabular-nums' }}
           >
             {countdownNumber}
@@ -466,8 +615,10 @@ export default function SoccerGame({ onClose, startX, startY }: SoccerGameProps)
         </div>
       )}
 
-      <canvas ref={ballCanvasRef} className="pointer-events-none absolute inset-0 z-[45]" />
-
+      <canvas
+        ref={ballCanvasRef}
+        className="pointer-events-none absolute inset-0 z-[45]"
+      />
     </div>
   )
 }

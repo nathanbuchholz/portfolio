@@ -1,12 +1,42 @@
-import type { Collectible, FloatingText, GameConfig, GameHandle, GameScore, HighScore, TutorialPhase, TutorialSteps, VisualEffect } from './types'
+import type {
+  Collectible,
+  FloatingText,
+  GameConfig,
+  GameHandle,
+  GameScore,
+  HighScore,
+  TutorialPhase,
+  TutorialSteps,
+  VisualEffect,
+} from './types'
 import { GamePerfMonitor } from './GamePerfMonitor'
-import { drawGroundShadow, drawSoccerBall, drawKickZoneHighlight, randomVariance, rgba } from './rendering'
 import {
-  isMobile, GROWTH_DURATION, WALL_THICKNESS, COLLECTIBLE_BOUNCE_AMP, COLLECTIBLE_BOUNCE_SPEED,
-  COLLECTIBLE_SPIN_SPEED, FLOATING_TEXT_FADE, TUTORIAL_GRAVITY, TUTORIAL_SLOW_RISE_GRAVITY,
-  TUTORIAL_STEP5_GRAVITY, TUTORIAL_COYOTE_MS, TUTORIAL_START_Y_RATIO,
-  TUTORIAL_BOUNCE_VEL, TUTORIAL_STEP4_GRAVITY, TUTORIAL_STEP4_BOUNCE_VEL,
-  LS_TUTORIAL_KEY, isTutorialPhysicsPhase, saveHighScore, loadBallImage,
+  drawGroundShadow,
+  drawSoccerBall,
+  drawKickZoneHighlight,
+  randomVariance,
+  rgba,
+} from './rendering'
+import {
+  isMobile,
+  GROWTH_DURATION,
+  WALL_THICKNESS,
+  COLLECTIBLE_BOUNCE_AMP,
+  COLLECTIBLE_BOUNCE_SPEED,
+  COLLECTIBLE_SPIN_SPEED,
+  FLOATING_TEXT_FADE,
+  TUTORIAL_GRAVITY,
+  TUTORIAL_SLOW_RISE_GRAVITY,
+  TUTORIAL_STEP5_GRAVITY,
+  TUTORIAL_COYOTE_MS,
+  TUTORIAL_START_Y_RATIO,
+  TUTORIAL_BOUNCE_VEL,
+  TUTORIAL_STEP4_GRAVITY,
+  TUTORIAL_STEP4_BOUNCE_VEL,
+  LS_TUTORIAL_KEY,
+  isTutorialPhysicsPhase,
+  saveHighScore,
+  loadBallImage,
 } from './constants'
 
 export interface GameEngineParams {
@@ -45,10 +75,23 @@ export async function createGameEngine(
   cancelled: () => boolean,
 ): Promise<GameHandle | null> {
   const {
-    bgCanvas, ballCanvas, startX, startY,
-    configRef, highScoreRef, tutorialPhaseRef, tutorialStepsRef, settingsOpenRef, pausedRef,
-    setLoading, setScore, setMultiplier, setElapsed, setHighScore,
-    setTutorialPhase, setTutorialSteps,
+    bgCanvas,
+    ballCanvas,
+    startX,
+    startY,
+    configRef,
+    highScoreRef,
+    tutorialPhaseRef,
+    tutorialStepsRef,
+    settingsOpenRef,
+    pausedRef,
+    setLoading,
+    setScore,
+    setMultiplier,
+    setElapsed,
+    setHighScore,
+    setTutorialPhase,
+    setTutorialSteps,
   } = params
 
   const _bgCtx = bgCanvas.getContext('2d')
@@ -78,7 +121,10 @@ export async function createGameEngine(
   await new Promise<void>((resolve) => {
     const growthStart = performance.now()
     function growLoop(time: number) {
-      if (cancelled()) { resolve(); return }
+      if (cancelled()) {
+        resolve()
+        return
+      }
       const elapsed = time - growthStart
       const t = Math.min(elapsed / GROWTH_DURATION, 1)
       const eased = 1 - Math.pow(1 - t, 3)
@@ -96,7 +142,10 @@ export async function createGameEngine(
 
   // Determine tutorial flow
   const tutorialSeen = localStorage.getItem(LS_TUTORIAL_KEY) === '1'
-  const tutorialX = Math.min(Math.max(startX, initialCfg.ballSize + 20), w - initialCfg.ballSize - 20)
+  const tutorialX = Math.min(
+    Math.max(startX, initialCfg.ballSize + 20),
+    w - initialCfg.ballSize - 20,
+  )
   const tutorialY = groundH * TUTORIAL_START_Y_RATIO
   if (tutorialSeen) {
     setPhase('playing', tutorialPhaseRef, setTutorialPhase)
@@ -104,38 +153,77 @@ export async function createGameEngine(
     setPhase('step1', tutorialPhaseRef, setTutorialPhase)
   }
 
-  const engine = Matter.Engine.create({ gravity: { x: 0, y: initialCfg.gravity } })
+  const engine = Matter.Engine.create({
+    gravity: { x: 0, y: initialCfg.gravity },
+  })
 
   const ball = Matter.Bodies.circle(
     tutorialSeen ? startX : tutorialX,
     tutorialSeen ? startY : tutorialY,
-    initialCfg.ballSize, {
-    restitution: initialCfg.ballBounce,
-    friction: initialCfg.friction,
-    frictionAir: initialCfg.airResistance,
-    density: initialCfg.ballDensity,
-    isStatic: !tutorialSeen,
-  })
+    initialCfg.ballSize,
+    {
+      restitution: initialCfg.ballBounce,
+      friction: initialCfg.friction,
+      frictionAir: initialCfg.airResistance,
+      density: initialCfg.ballDensity,
+      isStatic: !tutorialSeen,
+    },
+  )
 
-  const ground = Matter.Bodies.rectangle(w / 2, groundH + WALL_THICKNESS / 2, w * 3, WALL_THICKNESS, {
-    isStatic: true,
-    restitution: initialCfg.groundBounce,
-    label: 'ground',
-  })
-  const leftWall = Matter.Bodies.rectangle(-WALL_THICKNESS / 2, h / 2, WALL_THICKNESS, h * 3, {
-    isStatic: true,
-  })
-  const rightWall = Matter.Bodies.rectangle(w + WALL_THICKNESS / 2, h / 2, WALL_THICKNESS, h * 3, {
-    isStatic: true,
-  })
-  const ceiling = Matter.Bodies.rectangle(w / 2, -WALL_THICKNESS / 2, w * 3, WALL_THICKNESS, {
-    isStatic: true,
-    restitution: 0.2,
-  })
+  const ground = Matter.Bodies.rectangle(
+    w / 2,
+    groundH + WALL_THICKNESS / 2,
+    w * 3,
+    WALL_THICKNESS,
+    {
+      isStatic: true,
+      restitution: initialCfg.groundBounce,
+      label: 'ground',
+    },
+  )
+  const leftWall = Matter.Bodies.rectangle(
+    -WALL_THICKNESS / 2,
+    h / 2,
+    WALL_THICKNESS,
+    h * 3,
+    {
+      isStatic: true,
+    },
+  )
+  const rightWall = Matter.Bodies.rectangle(
+    w + WALL_THICKNESS / 2,
+    h / 2,
+    WALL_THICKNESS,
+    h * 3,
+    {
+      isStatic: true,
+    },
+  )
+  const ceiling = Matter.Bodies.rectangle(
+    w / 2,
+    -WALL_THICKNESS / 2,
+    w * 3,
+    WALL_THICKNESS,
+    {
+      isStatic: true,
+      restitution: 0.2,
+    },
+  )
 
-  Matter.Composite.add(engine.world, [ball, ground, leftWall, rightWall, ceiling])
+  Matter.Composite.add(engine.world, [
+    ball,
+    ground,
+    leftWall,
+    rightWall,
+    ceiling,
+  ])
 
-  const gameScore: GameScore = { volleys: 0, drops: 0, points: 0, startTime: performance.now() }
+  const gameScore: GameScore = {
+    volleys: 0,
+    drops: 0,
+    points: 0,
+    startTime: performance.now(),
+  }
   const effects: VisualEffect[] = []
   const collectibles: Collectible[] = []
   const floatingTexts: FloatingText[] = []
@@ -150,12 +238,25 @@ export async function createGameEngine(
   function checkAndSaveHighScore() {
     const elapsedTime = (performance.now() - gameScore.startTime) / 1000
     const hs = highScoreRef.current
-    const newBestPoints = gameScore.points > hs.bestPoints ? gameScore.points : hs.bestPoints
-    const newBestTime = gameScore.volleys > 0 && elapsedTime > hs.bestTime ? elapsedTime : hs.bestTime
-    const ppm = gameScore.volleys > 0 ? (gameScore.points / elapsedTime) * 60 : 0
+    const newBestPoints =
+      gameScore.points > hs.bestPoints ? gameScore.points : hs.bestPoints
+    const newBestTime =
+      gameScore.volleys > 0 && elapsedTime > hs.bestTime
+        ? elapsedTime
+        : hs.bestTime
+    const ppm =
+      gameScore.volleys > 0 ? (gameScore.points / elapsedTime) * 60 : 0
     const newBestPPM = ppm > hs.bestPPM ? ppm : hs.bestPPM
-    if (newBestPoints > hs.bestPoints || newBestTime > hs.bestTime || newBestPPM > hs.bestPPM) {
-      const newHs: HighScore = { bestPoints: newBestPoints, bestTime: newBestTime, bestPPM: newBestPPM }
+    if (
+      newBestPoints > hs.bestPoints ||
+      newBestTime > hs.bestTime ||
+      newBestPPM > hs.bestPPM
+    ) {
+      const newHs: HighScore = {
+        bestPoints: newBestPoints,
+        bestTime: newBestTime,
+        bestPPM: newBestPPM,
+      }
       saveHighScore(newHs)
       setHighScore(newHs)
     }
@@ -172,7 +273,10 @@ export async function createGameEngine(
     setScore({ ...gameScore })
     setMultiplier(1)
     setElapsed(0)
-    if (pendingDropTimeout) { clearTimeout(pendingDropTimeout); pendingDropTimeout = null }
+    if (pendingDropTimeout) {
+      clearTimeout(pendingDropTimeout)
+      pendingDropTimeout = null
+    }
     effects.length = 0
     collectibles.length = 0
     floatingTexts.length = 0
@@ -190,7 +294,13 @@ export async function createGameEngine(
         const tPhase = tutorialPhaseRef.current
         // Tutorial ground bounces are handled in the render loop to bypass
         // Matter.js collision pair tracking (which can swallow rapid bounces).
-        if (isTutorialPhysicsPhase(tPhase) || tPhase === 'step1' || tPhase === 'step1_pause' || tPhase === 'complete') break
+        if (
+          isTutorialPhysicsPhase(tPhase) ||
+          tPhase === 'step1' ||
+          tPhase === 'step1_pause' ||
+          tPhase === 'complete'
+        )
+          break
         if (now - lastGroundHitTime < 500) break
         lastGroundHitTime = now
         if (pendingDropTimeout) clearTimeout(pendingDropTimeout)
@@ -211,8 +321,11 @@ export async function createGameEngine(
           streakMultiplier = 1
           if (penalty > 0) {
             floatingTexts.push({
-              x: ball.position.x, y: groundH - 20,
-              text: `-${penalty}`, opacity: 1, vy: 0.5,
+              x: ball.position.x,
+              y: groundH - 20,
+              text: `-${penalty}`,
+              opacity: 1,
+              vy: 0.5,
               color: '#ef4444',
             })
           }
@@ -289,7 +402,10 @@ export async function createGameEngine(
     for (let i = collectibles.length - 1; i >= 0; i--) {
       const c = collectibles[i]
       const age = now - c.spawnTime
-      const cBounceY = c.y + Math.sin(age * COLLECTIBLE_BOUNCE_SPEED + c.bounceOffset) * COLLECTIBLE_BOUNCE_AMP
+      const cBounceY =
+        c.y +
+        Math.sin(age * COLLECTIBLE_BOUNCE_SPEED + c.bounceOffset) *
+          COLLECTIBLE_BOUNCE_AMP
       const cdx = bx - c.x
       const cdy = by - cBounceY
       if (cdx * cdx + cdy * cdy < hitRadius * hitRadius) {
@@ -301,23 +417,35 @@ export async function createGameEngine(
         setScore({ ...gameScore })
         const colorIdx = Math.min(kickCollectCount - 1, COMBO_COLORS.length - 1)
         floatingTexts.push({
-          x: c.x, y: c.y, text: `+${awarded}`,
-          opacity: 1, vy: 0.5, color: COMBO_COLORS[colorIdx],
+          x: c.x,
+          y: c.y,
+          text: `+${awarded}`,
+          opacity: 1,
+          vy: 0.5,
+          color: COMBO_COLORS[colorIdx],
         })
         effects.push({
-          x: c.x, y: c.y, radius: 8, opacity: 0.7,
+          x: c.x,
+          y: c.y,
+          radius: 8,
+          opacity: 0.7,
           rgb: [255, 215, 0],
         })
         collectibles.splice(i, 1)
-        if (tutorialPhaseRef.current === 'step5' && !tutorialStepsRef.current.step5) {
+        if (
+          tutorialPhaseRef.current === 'step5' &&
+          !tutorialStepsRef.current.step5
+        ) {
           tutorialStepsRef.current.step5 = true
-          setTutorialSteps(prev => ({ ...prev, step5: true }))
-          tutorialTimers.push(setTimeout(() => {
-            Matter.Body.setStatic(ball, true)
-            Matter.Body.setVelocity(ball, { x: 0, y: 0 })
-            setPhase('complete', tutorialPhaseRef, setTutorialPhase)
-            localStorage.setItem(LS_TUTORIAL_KEY, '1')
-          }, 800))
+          setTutorialSteps((prev) => ({ ...prev, step5: true }))
+          tutorialTimers.push(
+            setTimeout(() => {
+              Matter.Body.setStatic(ball, true)
+              Matter.Body.setVelocity(ball, { x: 0, y: 0 })
+              setPhase('complete', tutorialPhaseRef, setTutorialPhase)
+              localStorage.setItem(LS_TUTORIAL_KEY, '1')
+            }, 800),
+          )
         }
         continue
       }
@@ -339,8 +467,12 @@ export async function createGameEngine(
       const fadeOut = remaining < 1500 ? remaining / 1500 : 1
       bc.globalAlpha = fadeIn * fadeOut
 
-      const drawBounceY = Math.sin(age * COLLECTIBLE_BOUNCE_SPEED + c.bounceOffset) * COLLECTIBLE_BOUNCE_AMP
-      const scaleX = Math.abs(Math.cos(age * COLLECTIBLE_SPIN_SPEED + c.spinOffset))
+      const drawBounceY =
+        Math.sin(age * COLLECTIBLE_BOUNCE_SPEED + c.bounceOffset) *
+        COLLECTIBLE_BOUNCE_AMP
+      const scaleX = Math.abs(
+        Math.cos(age * COLLECTIBLE_SPIN_SPEED + c.spinOffset),
+      )
       const clampedScaleX = 0.15 + scaleX * 0.85
 
       bc.save()
@@ -357,7 +489,10 @@ export async function createGameEngine(
       const ft = floatingTexts[i]
       ft.y += ft.vy
       ft.opacity -= FLOATING_TEXT_FADE
-      if (ft.opacity <= 0) { floatingTexts.splice(i, 1); continue }
+      if (ft.opacity <= 0) {
+        floatingTexts.splice(i, 1)
+        continue
+      }
       bc.globalAlpha = ft.opacity
       bc.font = 'bold 24px monospace'
       bc.fillStyle = ft.color
@@ -367,9 +502,19 @@ export async function createGameEngine(
     bc.globalAlpha = 1
   }
 
-  function drawTutorialHints(phase: TutorialPhase, cfg: GameConfig, time: number) {
+  function drawTutorialHints(
+    phase: TutorialPhase,
+    cfg: GameConfig,
+    time: number,
+  ) {
     if (phase === 'step1_pause' || phase === 'step2') {
-      drawKickZoneHighlight(bc, ball.position.x, ball.position.y, cfg.ballSize, time)
+      drawKickZoneHighlight(
+        bc,
+        ball.position.x,
+        ball.position.y,
+        cfg.ballSize,
+        time,
+      )
       const zoneLineY = groundH * cfg.clickZone
       bc.save()
       bc.setLineDash([8, 6])
@@ -387,7 +532,13 @@ export async function createGameEngine(
       bc.restore()
     }
     if (phase === 'step3' || phase === 'step4' || phase === 'step5') {
-      drawKickZoneHighlight(bc, ball.position.x, ball.position.y, cfg.ballSize, time)
+      drawKickZoneHighlight(
+        bc,
+        ball.position.x,
+        ball.position.y,
+        cfg.ballSize,
+        time,
+      )
     }
   }
 
@@ -418,8 +569,22 @@ export async function createGameEngine(
       bg.clearRect(0, 0, w, h)
       bg.drawImage(zoneCanvas, 0, 0)
       bc.clearRect(0, 0, w, h)
-      drawGroundShadow(bc, ball.position.x, ball.position.y, groundH, cfg.ballSize)
-      drawSoccerBall(bc, ball.position.x, ball.position.y, cfg.ballSize, 0, false, ballImg)
+      drawGroundShadow(
+        bc,
+        ball.position.x,
+        ball.position.y,
+        groundH,
+        cfg.ballSize,
+      )
+      drawSoccerBall(
+        bc,
+        ball.position.x,
+        ball.position.y,
+        cfg.ballSize,
+        0,
+        false,
+        ballImg,
+      )
       animId = requestAnimationFrame(loop)
       return
     }
@@ -428,28 +593,68 @@ export async function createGameEngine(
       bg.clearRect(0, 0, w, h)
       bg.drawImage(zoneCanvas, 0, 0)
       bc.clearRect(0, 0, w, h)
-      drawGroundShadow(bc, ball.position.x, ball.position.y, groundH, cfg.ballSize)
-      drawSoccerBall(bc, ball.position.x, ball.position.y, cfg.ballSize, 0, false, ballImg)
+      drawGroundShadow(
+        bc,
+        ball.position.x,
+        ball.position.y,
+        groundH,
+        cfg.ballSize,
+      )
+      drawSoccerBall(
+        bc,
+        ball.position.x,
+        ball.position.y,
+        cfg.ballSize,
+        0,
+        false,
+        ballImg,
+      )
       animId = requestAnimationFrame(loop)
       return
     }
 
     if (phase === 'step1') {
-      const bx = ball.position.x, by = ball.position.y
-      const dx = tutorialX - bx, dy = tutorialY - by
+      const bx = ball.position.x,
+        by = ball.position.y
+      const dx = tutorialX - bx,
+        dy = tutorialY - by
       if (Math.abs(dx) > 2 || Math.abs(dy) > 2) {
         Matter.Body.setPosition(ball, { x: bx + dx * 0.1, y: by + dy * 0.1 })
       }
       bg.clearRect(0, 0, w, h)
       bg.drawImage(zoneCanvas, 0, 0)
       bc.clearRect(0, 0, w, h)
-      drawGroundShadow(bc, ball.position.x, ball.position.y, groundH, cfg.ballSize)
-      drawSoccerBall(bc, ball.position.x, ball.position.y, cfg.ballSize, 0, false, ballImg)
-      drawKickZoneHighlight(bc, ball.position.x, ball.position.y, cfg.ballSize, time)
+      drawGroundShadow(
+        bc,
+        ball.position.x,
+        ball.position.y,
+        groundH,
+        cfg.ballSize,
+      )
+      drawSoccerBall(
+        bc,
+        ball.position.x,
+        ball.position.y,
+        cfg.ballSize,
+        0,
+        false,
+        ballImg,
+      )
+      drawKickZoneHighlight(
+        bc,
+        ball.position.x,
+        ball.position.y,
+        cfg.ballSize,
+        time,
+      )
       const bounceY = Math.sin(time * 0.004) * 8
       bc.font = `${isMobile ? 32 : 24}px serif`
       bc.textAlign = 'center'
-      bc.fillText('\u{1F446}', ball.position.x, ball.position.y + cfg.ballSize + 24 + bounceY)
+      bc.fillText(
+        '\u{1F446}',
+        ball.position.x,
+        ball.position.y + cfg.ballSize + 24 + bounceY,
+      )
       animId = requestAnimationFrame(loop)
       return
     }
@@ -481,21 +686,33 @@ export async function createGameEngine(
     // Timer
     if (phase === 'playing') {
       const elapsedSec = (time - gameScore.startTime) / 1000
-      if (Math.floor(elapsedSec * 2) !== Math.floor((elapsedSec - delta / 1000) * 2)) {
+      if (
+        Math.floor(elapsedSec * 2) !==
+        Math.floor((elapsedSec - delta / 1000) * 2)
+      ) {
         setElapsed(elapsedSec)
       }
     }
 
     // Settings wall
-    const settingsWallTarget = (settingsOpenRef.current && !isMobile) ? (w - 304) + WALL_THICKNESS / 2 : w + WALL_THICKNESS / 2
+    const settingsWallTarget =
+      settingsOpenRef.current && !isMobile
+        ? w - 304 + WALL_THICKNESS / 2
+        : w + WALL_THICKNESS / 2
     const currentWallX = rightWall.position.x
     const wallDiff = settingsWallTarget - currentWallX
-    const newWallX = Math.abs(wallDiff) < 1 ? settingsWallTarget : currentWallX + wallDiff * 0.12
+    const newWallX =
+      Math.abs(wallDiff) < 1
+        ? settingsWallTarget
+        : currentWallX + wallDiff * 0.12
     Matter.Body.setPosition(rightWall, { x: newWallX, y: h / 2 })
     const effectiveW = newWallX - WALL_THICKNESS / 2
     if (wallDiff < -1) {
       if (ball.position.x > effectiveW - cfg.ballSize) {
-        Matter.Body.setVelocity(ball, { x: Math.min(ball.velocity.x, -3), y: ball.velocity.y })
+        Matter.Body.setVelocity(ball, {
+          x: Math.min(ball.velocity.x, -3),
+          y: ball.velocity.y,
+        })
       }
       for (const c of collectibles) {
         if (c.x > effectiveW - cfg.collectibleSize) {
@@ -529,20 +746,30 @@ export async function createGameEngine(
         } else if (phase === 'step5') {
           Matter.Body.setVelocity(ball, { x: 0, y: TUTORIAL_STEP4_BOUNCE_VEL })
           if (pendingDropTimeout) clearTimeout(pendingDropTimeout)
-          pendingDropTimeout = setTimeout(() => { pendingDropTimeout = null }, TUTORIAL_COYOTE_MS)
+          pendingDropTimeout = setTimeout(() => {
+            pendingDropTimeout = null
+          }, TUTORIAL_COYOTE_MS)
         } else if (phase === 'step3') {
           Matter.Body.setVelocity(ball, { x: 0, y: TUTORIAL_BOUNCE_VEL })
           if (pendingDropTimeout) clearTimeout(pendingDropTimeout)
-          pendingDropTimeout = setTimeout(() => { pendingDropTimeout = null }, TUTORIAL_COYOTE_MS)
+          pendingDropTimeout = setTimeout(() => {
+            pendingDropTimeout = null
+          }, TUTORIAL_COYOTE_MS)
         } else if (phase === 'step4') {
           Matter.Body.setVelocity(ball, { x: 0, y: TUTORIAL_STEP4_BOUNCE_VEL })
           if (pendingDropTimeout) clearTimeout(pendingDropTimeout)
-          pendingDropTimeout = setTimeout(() => { pendingDropTimeout = null }, TUTORIAL_COYOTE_MS)
+          pendingDropTimeout = setTimeout(() => {
+            pendingDropTimeout = null
+          }, TUTORIAL_COYOTE_MS)
           effects.push({
-            x: ball.position.x, y: groundH - 2,
-            radius: cfg.ballSize * 0.5, opacity: 0.8,
+            x: ball.position.x,
+            y: groundH - 2,
+            radius: cfg.ballSize * 0.5,
+            opacity: 0.8,
             rgb: [34, 197, 94],
-            squash: 0.3, expandRate: 3, fadeRate: 0.04,
+            squash: 0.3,
+            expandRate: 3,
+            fadeRate: 0.04,
           })
         }
       }
@@ -555,11 +782,13 @@ export async function createGameEngine(
     if (phase === 'step1_pause' && !ball.isStatic && ball.velocity.y >= 0) {
       Matter.Body.setStatic(ball, true)
       Matter.Body.setVelocity(ball, { x: 0, y: 0 })
-      tutorialTimers.push(setTimeout(() => {
-        setPhase('step2', tutorialPhaseRef, setTutorialPhase)
-        Matter.Body.setStatic(ball, false)
-        engine.gravity.y = TUTORIAL_GRAVITY
-      }, 500))
+      tutorialTimers.push(
+        setTimeout(() => {
+          setPhase('step2', tutorialPhaseRef, setTutorialPhase)
+          Matter.Body.setStatic(ball, false)
+          engine.gravity.y = TUTORIAL_GRAVITY
+        }, 500),
+      )
     }
 
     if (phase === 'step1_pause' || phase === 'step2') {
@@ -591,10 +820,25 @@ export async function createGameEngine(
     bc.clearRect(0, 0, w, h)
     drawCollectibles(cfg, now)
     drawFloatingTexts()
-    drawGroundShadow(bc, ball.position.x, ball.position.y, groundH, cfg.ballSize)
-    const cooldownRemaining = cfg.clickCooldownMs - (performance.now() - lastClickTime)
+    drawGroundShadow(
+      bc,
+      ball.position.x,
+      ball.position.y,
+      groundH,
+      cfg.ballSize,
+    )
+    const cooldownRemaining =
+      cfg.clickCooldownMs - (performance.now() - lastClickTime)
     const onCooldown = cooldownRemaining > 0
-    drawSoccerBall(bc, ball.position.x, ball.position.y, cfg.ballSize, ball.angle, onCooldown, ballImg)
+    drawSoccerBall(
+      bc,
+      ball.position.x,
+      ball.position.y,
+      cfg.ballSize,
+      ball.angle,
+      onCooldown,
+      ballImg,
+    )
     drawTutorialHints(phase, cfg, time)
 
     perf.recordDrawEnd()
@@ -628,7 +872,9 @@ export async function createGameEngine(
       pendingDropTimeout = null
     }
     kickCollectCount = 0
-    const strength = Math.sqrt((normalizedY - cfg.clickZone) / (1 - cfg.clickZone))
+    const strength = Math.sqrt(
+      (normalizedY - cfg.clickZone) / (1 - cfg.clickZone),
+    )
 
     const upForce = -cfg.kickForce - cfg.heightBonus * strength
 
@@ -640,7 +886,7 @@ export async function createGameEngine(
       engine.gravity.y = TUTORIAL_SLOW_RISE_GRAVITY
       Matter.Body.setVelocity(ball, { x: 0, y: -3 })
       tutorialStepsRef.current.step1 = true
-      setTutorialSteps(prev => ({ ...prev, step1: true }))
+      setTutorialSteps((prev) => ({ ...prev, step1: true }))
       setPhase('step1_pause', tutorialPhaseRef, setTutorialPhase)
       effects.push({
         x: ball.position.x,
@@ -654,18 +900,33 @@ export async function createGameEngine(
       return
     }
 
-    const isTutorialStep = phase === 'step2' || phase === 'step3' || phase === 'step4' || phase === 'step5'
-    const sideForce = (phase === 'step2' || phase === 'step3' || phase === 'step4')
-      ? 0
-      : -(dx / cfg.ballSize) * cfg.sideForce
+    const isTutorialStep =
+      phase === 'step2' ||
+      phase === 'step3' ||
+      phase === 'step4' ||
+      phase === 'step5'
+    const sideForce =
+      phase === 'step2' || phase === 'step3' || phase === 'step4'
+        ? 0
+        : -(dx / cfg.ballSize) * cfg.sideForce
 
     if (isTutorialStep) {
-      const tutorialKickY = isHalfVolley ? (phase === 'step5' ? -16 : -12) : phase === 'step5' ? -5 : -3
+      const tutorialKickY = isHalfVolley
+        ? phase === 'step5'
+          ? -16
+          : -12
+        : phase === 'step5'
+          ? -5
+          : -3
       Matter.Body.setVelocity(ball, { x: sideForce * 80, y: tutorialKickY })
     } else {
       const forceX = ball.position.x + (x - ball.position.x) * 0.3
       const forceY = ball.position.y + (y - ball.position.y) * 0.3
-      Matter.Body.applyForce(ball, { x: forceX, y: forceY }, { x: sideForce, y: upForce })
+      Matter.Body.applyForce(
+        ball,
+        { x: forceX, y: forceY },
+        { x: sideForce, y: upForce },
+      )
     }
 
     const r = Math.round(59 + (34 - 59) * strength)
@@ -689,20 +950,23 @@ export async function createGameEngine(
 
     if (phase === 'step2' && !tutorialStepsRef.current.step2) {
       tutorialStepsRef.current.step2 = true
-      setTutorialSteps(prev => ({ ...prev, step2: true }))
+      setTutorialSteps((prev) => ({ ...prev, step2: true }))
       setPhase('step3', tutorialPhaseRef, setTutorialPhase)
     }
 
     if (phase === 'step3' && !isHalfVolley && !tutorialStepsRef.current.step3) {
       tutorialStepsRef.current.step3 = true
-      setTutorialSteps(prev => ({ ...prev, step3: true }))
+      setTutorialSteps((prev) => ({ ...prev, step3: true }))
       setPhase('step4', tutorialPhaseRef, setTutorialPhase)
     }
 
     if (phase === 'step4' && isHalfVolley && !tutorialStepsRef.current.step4) {
       tutorialStepsRef.current.step4 = true
-      setTutorialSteps(prev => ({ ...prev, step4: true }))
-      const starX = Math.min(ball.position.x + cfg.ballSize * 3, w - cfg.collectibleSize)
+      setTutorialSteps((prev) => ({ ...prev, step4: true }))
+      const starX = Math.min(
+        ball.position.x + cfg.ballSize * 3,
+        w - cfg.collectibleSize,
+      )
       collectibles.push({
         x: starX,
         y: Math.min(ball.position.y - 80, h * 0.4),
@@ -722,7 +986,9 @@ export async function createGameEngine(
     cleanup: () => {
       checkAndSaveHighScore()
       cancelAnimationFrame(animId)
-      if (pendingDropTimeout) { clearTimeout(pendingDropTimeout) }
+      if (pendingDropTimeout) {
+        clearTimeout(pendingDropTimeout)
+      }
       tutorialTimers.forEach(clearTimeout)
       perf.cleanup()
       Matter.Engine.clear(engine)
