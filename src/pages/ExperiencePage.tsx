@@ -1,14 +1,17 @@
 import { experience } from '../data'
 import Card from '../components/Card'
 import TextLink from '../components/TextLink'
-import { useDocumentTitle } from '../hooks/useDocumentTitle'
+import SEO from '../components/SEO'
 
 const driveFileId = import.meta.env.VITE_RESUME_DRIVE_ID
 
 export default function ExperiencePage() {
-  useDocumentTitle('Experience')
   return (
     <main>
+      <SEO
+        title="Experience"
+        description="Work experience and resume for Nathan Buchholz, a backend-focused full stack developer with 10+ years of experience."
+      />
       <h1 className="text-3xl font-bold">Experience</h1>
 
       <div className="mt-4">

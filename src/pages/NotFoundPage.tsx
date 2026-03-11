@@ -1,8 +1,11 @@
+import { useEffect } from 'react'
 import TextLink from '../components/TextLink'
-import { useDocumentTitle } from '../hooks/useDocumentTitle'
 
 export default function NotFoundPage() {
-  useDocumentTitle('Page Not Found')
+  useEffect(() => {
+    document.title = 'Page Not Found | Nathan Buchholz'
+  }, [])
+
   return (
     <main className="py-12 text-center">
       <h1 className="text-6xl font-bold">404</h1>

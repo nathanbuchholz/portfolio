@@ -1,12 +1,15 @@
 import { education } from '../data'
 import Card from '../components/Card'
 import TextLink from '../components/TextLink'
-import { useDocumentTitle } from '../hooks/useDocumentTitle'
+import SEO from '../components/SEO'
 
 export default function EducationPage() {
-  useDocumentTitle('Education')
   return (
     <main>
+      <SEO
+        title="Education"
+        description="Educational background for Nathan Buchholz, including degrees and fields of study."
+      />
       <h1 className="text-3xl font-bold">Education</h1>
       <div className="mt-8 space-y-6">
         {education.map((entry) => (

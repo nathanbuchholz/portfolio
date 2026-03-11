@@ -1,13 +1,15 @@
 import { projects } from '../data'
 import Card from '../components/Card'
 import TextLink from '../components/TextLink'
-import { useDocumentTitle } from '../hooks/useDocumentTitle'
+import SEO from '../components/SEO'
 
 export default function ProjectsPage() {
-  useDocumentTitle('Projects')
-
   return (
     <main>
+      <SEO
+        title="Projects"
+        description="Portfolio projects showcasing expertise in data pipelines, APIs, and full-stack development."
+      />
       <h1 className="text-3xl font-bold">Projects</h1>
       <div className="mt-8 grid gap-6 sm:grid-cols-2">
         {projects.map((project) => (

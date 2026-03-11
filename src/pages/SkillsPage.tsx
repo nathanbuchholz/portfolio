@@ -1,11 +1,14 @@
 import { skills } from '../data'
 import Card from '../components/Card'
-import { useDocumentTitle } from '../hooks/useDocumentTitle'
+import SEO from '../components/SEO'
 
 export default function SkillsPage() {
-  useDocumentTitle('Skills')
   return (
     <main>
+      <SEO
+        title="Skills"
+        description="Technical skills including Python, TypeScript, SQL, AWS, React, and more."
+      />
       <h1 className="text-3xl font-bold">Skills</h1>
       <div className="mt-8 grid gap-6 sm:grid-cols-2">
         {skills.map((category) => (

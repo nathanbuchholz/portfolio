@@ -1,10 +1,9 @@
 import { useState, useCallback } from 'react'
 import { catPhotos } from '../data'
 import Lightbox from '../components/Lightbox'
-import { useDocumentTitle } from '../hooks/useDocumentTitle'
+import SEO from '../components/SEO'
 
 export default function CatsPage() {
-  useDocumentTitle('Cats')
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null)
   const [lightboxOpen, setLightboxOpen] = useState(false)
 
@@ -26,6 +25,7 @@ export default function CatsPage() {
 
   return (
     <main>
+      <SEO title="Cats" description="Photos of Nathan's three adorable cats." />
       <h1 className="text-3xl font-bold">Cats</h1>
       <p className="mt-4 text-lg text-gray-700 dark:text-gray-300">
         If you made it this far, you deserve some pictures of my three adorable
