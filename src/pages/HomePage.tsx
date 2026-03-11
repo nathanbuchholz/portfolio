@@ -1,17 +1,17 @@
 import { useState } from 'react'
 import { FaGithub, FaLinkedin } from 'react-icons/fa'
 import ContactModal from '../components/ContactModal'
-import { useDocumentTitle } from '../hooks/useDocumentTitle'
+import SEO from '../components/SEO'
 
 const socialLinkClass =
   'inline-flex items-center gap-2 text-gray-700 transition-all duration-200 hover:text-blue-600 active:scale-95 active:text-blue-800 dark:text-gray-300 dark:hover:text-blue-400 dark:active:text-blue-300'
 
 export default function HomePage() {
-  useDocumentTitle()
   const [showContact, setShowContact] = useState(false)
 
   return (
     <main>
+      <SEO description="Backend-focused software engineer with 10+ years of experience in data engineering, infrastructure, and application development." />
       <section className="py-12">
         <div className="flex flex-col items-start gap-8 sm:flex-row sm:items-center">
           <div className="w-32">
